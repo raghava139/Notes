@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- react -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- antd -->
+    <script crossorgin src="https://unpkg.com/antd@4.18.5/dist/antd.min.js"></script>
+    
+    <!-- antd css -->
+     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.24.2/antd.variable.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+  <!-- antd icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ant-design-icons/4.8.0/index.umd.min.js" integrity="sha512-R7u/AOwXNm4zW6L23FcuwmWPfgFwuXOj2lZYiy/g2XUwsUv023FOJlrf7GnAzr+y4PSWn/nmd3m4IXfngbjKJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ant-design-icons/4.8.0/index.umd.js" integrity="sha512-EfTHXlk7g4LhZsld/M0dIa5M/kiRR7irCDKym9ji4FdqNqK4S5BW/Bbb+mSqt0cSfdZ4EciUB+GZK1+XgORYuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>ANTD React Design</title>
+  </head>
+  <body>
+    <div id="mydiv"></div>
+    <script type="text/babel">
+      // const Table = antd.Table
+      // const Button = antd.Button
+const {Table,Button,Input,Space}=antd
+  const {useState,useEffect,useRef}=React
+const{ SearchOutlined } = icons
+      var dataSource = [
+    {
+      key: '1',
+      name: 'Rekha',
+      age: 32,
+      address: '10 Downing Street',
+      gender:"female"
+    },
+    {
+      key: '2',
+      name: 'John',
+      age: 42,
+      address: '10 Downing Street',
+      gender:"Male"
+    },
+    {
+      key: '3',
+      name: 'Rohit',
+      age: 42,
+      address: '10 Downing Street',
+      gender:"Male"
+    },
+    {
+      key: '4',
+      name: 'Suma',
+      age: 42,
+      address: '10 Downing Street',
+      gender:"female"
+    },
+    {
+      key: '5',
+      name: 'OBulReddy',
+      age: 42,
+      address: '10 Downing Street',
+      gender:"Male"
+    },
+  ];
+  
+;
+        function Hello() {
+          const [state,setState]=useState("State_Count")
+          const [searchText, setSearchText] = useState('');
+          const [searchedColumn, setSearchedColumn] = useState('');
+          const searchInput = useRef(null);
+
+        console.log(state)
+        const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1890ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+  });
+  var columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      ...getColumnSearchProps('name'),
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age',
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+    },
+    {
+      title: 'Gender',
+      dataIndex: 'gender',
+      key: 'gender',
+      filters: [
+        {
+          text: 'male',
+          value: 'Male',
+        },
+        {
+          text: 'female',
+          value: 'female'
+        },
+      ],
+      onFilter: (value, record) => {
+        // console.log(value)
+        // console.log(record)
+        console.log(record.gender.includes(value))
+        return record.gender.includes(value)
+      }
+      
+    },
+  ]
+          return <Table dataSource={dataSource} columns={columns} />;
+        }
+        
+        ReactDOM.render(<Hello />, document.getElementById('mydiv'))
+      </script>
+
+    </script>
+  </body>
+</html>

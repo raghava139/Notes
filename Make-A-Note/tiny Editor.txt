@@ -1,0 +1,16 @@
+                        {/* <Editor
+                        apiKey="fgfb0sqsmfzz4mek5y1fis4vjul8anpt81duffkcirokqv3a"
+                        name=""
+                        editorState={items?.FullDescription}
+                        // initialValue={items?.FullDescription}
+                        value={items?.FullDescription}
+                        wrapperClassName="demo-wrapper"
+                        //onEditorChange
+                        onEditorChange={(content, editor) =>
+                          // console.log(editor)
+                          handleChange({
+                            name: "FullDescription",
+                            value: content,
+                          })
+                        }
+                      /> */}

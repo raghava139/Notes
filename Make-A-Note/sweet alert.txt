@@ -1,0 +1,40 @@
+sweet alert--for success
+import SweetAlert from "react-bootstrap-sweetalert";
+{success_msg ? (
+                <SweetAlert
+                  title="updated SuccessFully!"
+                  success
+                  showCancel
+                  confirmBtnBsStyle="success"
+                  cancelBtnBsStyle="danger"
+                  onConfirm={() => {
+                    setsuccess_msg(false);
+                  }}
+                  onCancel={() => {
+                    setsuccess_msg(false);
+                  }}
+                ></SweetAlert>
+              ) : null}
+
+  const [delete_msg, setDelete_msg] = useState(false);
+ {delete_msg ? (
+                      <SweetAlert
+                        title="Deleted SuccessFully!"
+                        success
+                        showCancel
+                        confirmBtnBsStyle="success"
+                        cancelBtnBsStyle="danger"
+                        onConfirm={() => {
+                          setDelete_msg(false);
+                        }}
+                        onCancel={() => {
+                          setDelete_msg(false);
+                        }}
+{
+warning
+title="The Internet?"
+   warning
+onConfirm={() => {
+setwith_title(false)
+                      ></SweetAlert>
+                    ) : null}

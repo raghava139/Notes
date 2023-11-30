@@ -1,0 +1,33 @@
+Q.)
+how to sort a table column with both text and numbers in Ant Design's table component using React?
+A.)  sorter: (a, b) => a.name.localeCompare(b.name)
+
+
+import { Table } from 'antd';
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    sorter: (a, b) => a.age - b.age,
+  },
+];
+
+const data = [
+  { name: 'John Doe', age: 32 },
+  { name: 'Jane Doe', age: 31 },
+  { name: 'Jim Brown', age: 33 },
+];
+
+function App() {
+  return (
+    <Table columns={columns} dataSource={data} />
+  );
+}
+
+export default App;
+

@@ -1,0 +1,3 @@
+Q.)unsupported_next dev?
+A.)
+cross-env NODE_OPTIONS='--openssl-legacy-provider --inspect' next dev

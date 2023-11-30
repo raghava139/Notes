@@ -1,0 +1,10 @@
+------->Datatable to get all records
+$("table_id tbody tr").each(function(){
+	var x=$(this).find("td:eq(1)").text();
+})
+
+------>DataTable To get single record data
+$('table_id tbody').on('click', id,function(){
+	var row =$(this).closest('tr');
+                  row.find("td:eq(1)").text();
+})

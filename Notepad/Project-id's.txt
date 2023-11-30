@@ -1,0 +1,9 @@
+Main Portal
+admin@yourstore.com
+12345
+
+vendors
+y.raghavendra0139@gmail.com
+api@123
+base64:YXBpQDEyMw==
+src\helpers\api_helper.js

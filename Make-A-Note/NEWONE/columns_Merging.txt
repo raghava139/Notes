@@ -1,0 +1,9 @@
+// columns merging    
+useEffect(() => {
+        const array = [];
+            data?.forEach((item1) => {
+                const data = Object.assign(item1, item1?.manifestData[0]);
+                array.push(data);
+            })
+        setFakeColumns(array)
+    }, [data])

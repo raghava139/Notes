@@ -1,0 +1,161 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import 'antd/dist/antd.css';
+import './index.css';
+import { Table, Input } from 'antd';
+const { Search } = Input;
+const columns = [
+  {
+    title: 'Order#',
+    dataIndex: 'order',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.order - b.order,
+  },
+  {
+    title: 'CustomerName',
+    dataIndex: 'CustomerName',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.CustomerName - b.CustomerName,
+  },
+  {
+    title: 'createDate',
+    dataIndex: 'createDate',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.createDate - b.createDate,
+  },
+  {
+    title: 'Mulit Sku',
+    dataIndex: 'Multi_SKU',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.Multi_SKU - b.Multi_SKU,
+  },
+  {
+    title: 'Service',
+    dataIndex: 'Service',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.Service - b.Service,
+  },
+];
+const data = [
+  {
+    key: '1',
+    order: 12343,
+    Client: 'manoj',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'yes',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '2',
+    order: 12343,
+    Client: 'yuvaraj',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'no',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '3',
+    order: 12343,
+    Client: 'ramu',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'yes',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '4',
+    order: 23423,
+    Client: 'shiva',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'no',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '5',
+    order: 2342,
+    Client: 'Allstate',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'yes',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '6',
+    order: 23525,
+    Client: 'Allstate',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'yes',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '7',
+    order: 32524,
+    Client: 'Allstate',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'no',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '8',
+    order: 9780,
+    Client: 'Allstate',
+    CustomerName: 'Garrett Winters',
+    createDate: '04/25/2022',
+    Multi_SKU: 'yes',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '9',
+    order: 19033,
+    Client: 'Allstate',
+    CustomerName: 'remo',
+    createDate: '04/25/2022',
+    Multi_SKU: 'yes',
+    Service: 'UPS Ground',
+  },
+  {
+    key: '10',
+    order: 12343,
+    Client: 'Allstate',
+    CustomerName: 'raghavendra',
+    createDate: '04/25/2022',
+    Multi_SKU: 'yes',
+    Service: 'my Ground',
+  },
+];
+
+function App() {
+  const [filterInput, setFilterInput] = React.useState('');
+  const filterData = () => {
+    if (filterInput === '') return data;
+
+    if (isNaN(filterInput)) {
+      return data.filter(
+        ({ order,CustomerName, createDate, Multi_SKU, Service }) =>
+          Service.includes(filterInput)||CustomerName.includes(filterInput)||Multi_SKU.includes(filterInput)||order.includes(filterInput)||createDate.includes(filterInput)
+      );
+    }
+  };
+
+  return (
+    <div>
+      <Search
+        placeholder="input search text"
+        allowClear
+        enterButton="Search"
+        size="large"
+        onSearch={setFilterInput}
+      />
+      <br />
+      <br /> <br />
+      <Table columns={columns} dataSource={filterData()} />
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById('container'));

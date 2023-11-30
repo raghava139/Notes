@@ -1,0 +1,4 @@
+'npm start' returns error: "There might be a problem with the project dependency tree"
+1.create a .env at the root of the folder react folder
+2.type SKIP_PREFLIGHT_CHECK=true inside of .env file
+3.now run in cmd npm start .

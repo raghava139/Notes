@@ -1,0 +1,47 @@
+ <Table striped bordered hover>
+              <thead className="text-center">
+                <tr>
+                  <th>
+                    <Input type="checkbox" />
+                  </th>
+                  <th>SKU</th>
+                  <th>ProductName</th>
+                  {/* <th>status</th> */}
+                  <th>price</th>
+                  <th>sold</th>
+                  <th>stockQuantity</th>
+                  <th>action</th>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                {productsData?.map((current, index) => (
+                  <tr key={index}>
+                    <td>
+                      <Input type="checkbox" />
+                    </td>
+                    <td>{current.Sku}</td>
+                    <td className="text-left">
+                      <NavLink to={`/product/${current.Id}`}>
+                        {current.Name.substr(0, 35)}
+                      </NavLink>
+                    </td>
+                    <td>{current.Price}</td>
+                    <td>{current.Sold}</td>
+                    <td className="text-center">{current.StockQuantity}</td>
+                    <td>
+                      <NavLink to={`/updateProduct/${current.Id}`}>
+                        <i className="fas fa-edit text-primary p-2"></i>
+                      </NavLink>{" "}
+                      <i
+                        className="fa fa-trash text-danger p-2"
+                        aria-hidden="true"
+                      ></i>
+                      <i
+                        className="fa fa-ellipsis-v text-info p-2"
+                        aria-hidden="true"
+                      ></i>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>

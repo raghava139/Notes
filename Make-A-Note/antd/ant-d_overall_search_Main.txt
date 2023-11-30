@@ -1,0 +1,39 @@
+                      <AutoComplete
+                              style={{
+                                width: "18em",
+                                paddingRight: "6px",
+                                // paddingLeft: "2px",
+                              }}
+                              placeholder="Search by..."
+                              enterButton
+                              onSearch={search}
+                              // size="medium"
+                            />
+-----------------------------------------------
+  const search = (value) => {
+    const filterTable = tableSkuData.filter((o) =>
+      Object.keys(o).some((k) =>
+        String(o[k]).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    setMyfilterTable(filterTable);
+  };
+--------------------------------------------------
+     <Table
+                    columns={filterColumns}
+                    bordered
+                    scroll={{ x: true }}
+                    dataSource={
+                      MyfilterTable == null ? tableSkuData : MyfilterTable
+                    }
+                    sortDirections={["descend", "ascend"]}
+                    size="small"
+                    pagination={{
+                      defaultPageSize: 50,
+                      showSizeChanger: true,
+                      pageSizeOptions: ["50"],
+                    }}
+                    style={{ marginTop: "9px" }}
+                    stripes="even"
+                    loading={myLoading}
+                  />

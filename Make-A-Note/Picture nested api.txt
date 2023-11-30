@@ -1,0 +1,55 @@
+ const FirstApiPicture =  () => {
+    // const token = localStorage.getItem("token")
+
+    let apiRes = null;
+    // const token = localStorage.getItem("token");
+    let token5 = localStorage.getItem("token");
+    var dataFormat = {
+      pictureBinary: `${pictureData}`,
+      mimeType: "image/jpeg",
+      seoFilename: "pics",
+      altAttribute: "nat",
+      titleAttribute: "sunRise.jpg",
+      reference: 0,
+      objectId: `${Id}`,
+      isNew: true,
+    };
+
+    apiRes =  axios({
+      method: "POST",
+      url: `http://216.230.74.17:8010/odata/Picture`,
+      headers: {
+        "Content-Type": "application/json",
+        "access-control-allow-origin": "*",
+        Authorization: `Bearer ${token5}`,
+        // 'Authorization': 'Bearer'+token
+      },
+      data: dataFormat,
+    })
+      .then((res) => {
+        if (res) {
+          console.log(res.data);
+          //2nd api
+          // const token = localStorage.getItem("token");
+          let token6 = localStorage.getItem("token");
+          // let data=var reader = new FileReader();
+          axios({
+            method: "POST",
+            url: `http://216.230.74.17:8010/odata/Product/(${Id})/CreateProductPicture`,
+            headers: {
+              "Content-Type": "application/json",
+              "access-control-allow-origin": "*",
+              Authorization: `Bearer ${token6}`,
+            },
+            data: {
+              pictureId: `${res.data?.Id}`,
+              displayOrder: 2,
+            },
+          }).then((res) => {
+            console.log(res);
+            alert("pictureID updated successfully");
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  };

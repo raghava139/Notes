@@ -1,0 +1,7 @@
+Q.) if icons are not showing in react native?
+A.) steps:
+1.)npm install react-native-vector-icons --save
+
+2.)
+open folder ----->  android/app/build.gradle
+add this one ---->  apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

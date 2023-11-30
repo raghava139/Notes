@@ -1,0 +1,5 @@
+APK Generate In Two Ways
+
+1.--> 
+Locationfolder -> android
+command-->gradlew assembleRelease

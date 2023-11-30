@@ -1,0 +1,70 @@
+Q.) Ant-d export excel problem in Columns?
+A.)---->render:(_,record)=>{}
+solution:-
+const columns = [
+    {
+      key: "1",
+      title: "SKU",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      sorter: (a, b) => a.sku1 - b.sku1,
+      render: (_, record) => (
+        <Link to={`/edit-sku/${record?.skuId}`}>{record?.sku1}</Link>
+      ),
+    },
+    {
+      key: "2",
+      title: "Description",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      sorter: (a, b) => a.sku1 - b.sku1,
+      render: (_, record) => (
+        <Typography.Text>{record?.description}</Typography.Text>
+      ),
+    },
+    {
+      key: "3",
+      title: "Status",
+      responsive: ["sm"],
+      align: "left",
+      sorter: (a, b) => a.sku1 - b.sku1,
+      render: (_, record) => (
+        <Tag
+          color={
+            record?.status === "Active"
+              ? "green"
+              : record?.status === "Discontinue"
+              ? "warning"
+              : record?.status === "Hold"
+              ? "lightgrey"
+              : record?.status === "Defective"
+              ? "red"
+              : null
+          }
+        >
+          {record?.status}
+        </Tag>
+      ),
+    },
+    {
+      key: "4",
+      title: "Item Type",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      sorter: (a, b) => a.sku1 - b.sku1,
+      render: (_, record) => (
+        <Typography.Text>{record?.itemType}</Typography.Text>
+      ),
+    },
+    {
+      key: "5",
+      title: "UOM",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      sorter: (a, b) => a.sku1 - b.sku1,
+      render: (_, record) => {
+        return <Typography.Text>{record?.uom}</Typography.Text>;
+      },
+      // hidden: true,
+    },
+  ].filter((item) => !item.hidden);

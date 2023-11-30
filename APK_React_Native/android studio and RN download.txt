@@ -1,0 +1,7 @@
+React Native project starting downloads
+1.chocolately
+2.android studio
+--->sdk platforms-->android 11.0('R')
+--->sdk tools---> android sdk build tools 34 ( AND ) intel x86 emulator
+3.react native project
+4.npm run android (or) npm start

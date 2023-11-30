@@ -1,0 +1,13 @@
+Q.)---> In Print remove headers and footers
+A.)<style type="text/css"> 
+ @media print {
+    body {
+    }
+    /* Hide headers and footers */
+    @page {
+      size: auto;
+      margin: 0mm;
+    }
+  }
+</style>
+ 

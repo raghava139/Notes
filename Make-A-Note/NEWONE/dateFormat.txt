@@ -1,0 +1,2 @@
+    date format ------------------>20/11/22
+ <p>{record?.lotexpdate?.substr(0, 10).split('-').reverse().join('/')}</p>

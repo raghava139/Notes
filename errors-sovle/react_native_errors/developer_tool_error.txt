@@ -1,0 +1,2 @@
+Q.) developer tool error ?
+A.) env-->path--->edit---->C:\Windows\System32

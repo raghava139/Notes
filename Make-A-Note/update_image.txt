@@ -1,0 +1,186 @@
+import { TableCell } from "@material-ui/core";
+import axios from "axios";
+import React, { useState } from "react";
+import { Image, Table } from 'antd';
+function UpdateImage({ RealId }) {
+  //creating in picture Id
+  const [pictureData, setPictureData] = useState();
+  const [ourImage, setOurImage] = useState();
+  const [particularPictureId, setParticularPictureId] = useState();
+
+  //image preview
+  const [visible, setVisible] = useState(false);
+  const[mixPic,setMixPic]=useState()
+  // const[fileImage,setFileImage]=useState()
+  console.log(pictureData);
+  console.log(particularPictureId?.Id);
+  // console.log(fileImage)
+
+  console.log(mixPic)
+  const encodeFileBase64 = (file) => {
+    // console.log(file)
+    // setFileImage(file)
+    var reader = new FileReader();
+    if (file) {
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        var base64 = reader.result;
+        // console.log(base64)
+        // console.log(base64);
+        var x = base64.replace("data:image/jpeg;base64,", "");
+        // console.log(x);
+        setPictureData(x);
+      };
+      reader.onerror = (err) => {
+        console.log("err :", err);
+      };
+    }
+  };
+  encodeFileBase64(ourImage);
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setOurImage(img);
+    }
+    // FirstApiPicture();
+  };
+  const dataSubmit = async (e) => {
+    e.preventDefault();
+    console.log(e);
+    // let apiRes = null;
+    // const token = localStorage.getItem("token");
+    let token5 = localStorage.getItem("token");
+    var dataFormat = {
+      pictureBinary: `${pictureData}`,
+      mimeType: "image/jpeg",
+      seoFilename: "",
+      altAttribute: "",
+      titleAttribute: "Image.jpg",
+      reference: 0,
+      objectId: `${RealId}`,
+      isNew: false,
+    };
+
+    await axios({
+      method: "POST",
+      url: `http://216.230.74.17:8010/odata/Picture`,
+      headers: {
+        "Content-Type": "application/json",
+        "access-control-allow-origin": "*",
+        Authorization: `Bearer ${token5}`,
+        // 'Authorization': 'Bearer'+token
+      },
+      data: dataFormat,
+    })
+      .then((res) => {
+        if (res) {
+          console.log(res.data);
+          setMixPic({firstData:res.data})
+          //2nd api
+          setParticularPictureId(res.data?.Id);
+          // const token = localStorage.getItem("token");
+          let token6 = localStorage.getItem("token");
+          // let data=var reader = new FileReader();
+          axios({
+            method: "POST",
+            url: `http://216.230.74.17:8010/odata/Product/(${RealId})/CreateProductPicture`,
+            headers: {
+              "Content-Type": "application/json",
+              "access-control-allow-origin": "*",
+              Authorization: `Bearer ${token6}`,
+            },
+            data: {
+              pictureId: `${res.data?.Id}`,
+              // pictureId: `${particularPictureId?.Id}`,
+
+            },
+          }).then((res) => {
+            console.log(res);
+            setMixPic({sendData:res?.pictureId})
+            alert("pictureID updated successfully");
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // delete picture Id
+  const dataDelete = () => {
+    (async () => {
+      let apiRes = null;
+      // const token = localStorage.getItem("token");
+      let token5 = localStorage.getItem("token");
+      var dataFormat = {
+        PictureId: `${particularPictureId}`,
+      };
+      try {
+        apiRes = await axios({
+          method: "POST",
+          url: `http://216.230.74.17:8010/odata/Product/(${RealId})/DeleteProductPicture`,
+          headers: {
+            "Content-Type": "application/json",
+            "access-control-allow-origin": "*",
+            Authorization: `Bearer ${token5}`,
+            // 'Authorization': 'Bearer'+token
+          },
+          data: dataFormat,
+        }).then((res) => {
+          // document.getElementById('Image_data').remove()
+          // console.log(res)
+          alert("deleted successfully");
+        });
+      } catch (err) {
+        apiRes = err.response;
+        console.log(apiRes);
+      }
+    })();
+  };
+
+//table show;
+
+  return (
+    <div>
+      {/* {fileImage>0?pictureData:null} */}
+      {/* <img src={`data:image/png;base64,${pictureData}`} id='Image_data' /> */}
+
+      <Image
+        preview={{ visible: false }}
+        width={150}
+        src={`data:image/png;base64,${pictureData}`}
+        onClick={() => setVisible(true)}
+      />
+         <div style={{ display: 'none' }}>
+        <Image.PreviewGroup preview={{ visible, onVisibleChange: vis => setVisible(vis) }}>
+        <Image
+        src={`data:image/png;base64,${pictureData}`}
+          />
+        </Image.PreviewGroup>
+      </div>
+
+      <br />
+      <h4>Upload Image</h4>{" "}
+      <form>
+        <input
+          type="file"
+          name="myImage"
+          onChange={onImageChange}
+          className="btn btn-danger"
+          multiple="multiple"
+        />
+        <br />
+        <button
+          className="btn btn-primary m-3"
+          type="submit"
+          onClick={dataSubmit}
+        >
+          Submit
+        </button>
+        <button type="button" className="btn btn-dark" onClick={dataDelete}>
+          Delete
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default UpdateImage;

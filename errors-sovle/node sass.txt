@@ -1,0 +1,12 @@
+npm install next react react-dom
+npm uninstall node-sass
+npm install sass
+npm install qs
+npm--------npm run dev
+yarn-------yarn next dev
+
+
+///solved folder fb frontend
+npm uninstall node-sass --legacy-peer-deps
+npm install node-sass@6.0.0 --legacy-peer-deps
+npm install --legacy-peer-deps

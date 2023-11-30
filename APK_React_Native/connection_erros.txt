@@ -1,0 +1,4 @@
+Q.)My---->connection problem scanner problem  in react native
+ANS.)
+1.)export update
+ 2.)expo start --tunnel

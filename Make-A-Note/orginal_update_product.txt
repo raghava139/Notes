@@ -1,0 +1,175 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
+
+function Updateproduct() {
+  const { Id } = useParams();
+  // console.log(Id);
+  const [update, setUpdate] = useState({
+    sku: "",
+    productName: "",
+    price: "",
+    sold: "",
+    stock: "",
+    fullDescription:"",
+    shortDescription:""
+  });
+  const[items,setItems]=useState()
+  const history = useHistory();
+  const backEvent = () => {
+    history.push("/products");
+  };
+  const changingEvent = (e) => {
+    const { name, value } = e.target;
+    setUpdate({ ...update, [name]: value });
+    // console.log(update)
+  };
+  const { sku, productName, price, sold, stock,fullDescription,shortDescription } = update;
+  const clickEvent = (e) => {
+    e.preventDefault();
+    // console.log(update)
+    (async () => {
+      let apiRes = null;
+      // const token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
+      // let data=
+      try {
+        apiRes = await axios({
+          method: "PUT",
+          url: `http://216.230.74.17:8010/odata/Product`,
+          headers: {
+            "Content-Type": "application/json",
+            "access-control-allow-origin": "*",
+            Authorization: `Bearer ${token}`,
+            // 'Authorization': 'Bearer '+token
+          },
+          data: {
+            Id:`${Id}`,
+            Sku: `${sku}`,
+            Name: `${productName}`,
+            Price: `${price}`,
+            Sold: `${sold}`,
+            StockQuantity: `${stock}`,
+            FullDescription:`${fullDescription}`,
+            ShortDescription:`${shortDescription}`
+          },
+        }).then((res) => {
+          console.log(res);
+          // alert("updated successfully");
+        });
+      } catch (err) {
+        apiRes = err.response;
+        console.log(apiRes);
+      }
+    })();
+  };
+  useEffect(() => {
+    const api = `http://216.230.74.17:8010/odata/Product/${Id}`;
+    const token = localStorage.getItem("token");
+    axios
+      .get(api, { headers: { Authorization: `Bearer ${token}` }})
+      .then((res) => {
+        // console.log(res)
+        // console.log(res.data);
+        setItems(res.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  return (
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
+      <div>
+        <h2 className="bg-danger text-white">Update Products</h2>
+      </div>
+      <div className="d-flex justify-content-center">
+        <Form className="w-75" onSubmit={clickEvent}>
+          <FormGroup>
+            <Label>Sku</Label>
+            <Input
+              type="text"
+              name="sku"
+              id="exampleEmail"
+              onChange={changingEvent}
+              defaultValue={items?.Sku}
+              className='h-75'
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>ProductName</Label>
+            <Input
+              type="text"
+              name="productName"
+              id="exampleEmail"
+              onChange={changingEvent}
+              defaultValue={items?.Name}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>price</Label>
+            <Input
+              type="text"
+              name="price"
+              id="exampleEmail"
+              onChange={changingEvent}
+              defaultValue={items?.Price}
+
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>Sold</Label>
+            <Input
+              type="text"
+              name="sold"
+              id="exampleEmail"
+              onChange={changingEvent}
+              defaultValue={items?.Sold}
+
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>stockQuantity</Label>
+            <Input
+              type="text"
+              name="stock"
+              id="exampleEmail"
+              onChange={changingEvent}
+              defaultValue={items?.StockQuantity}
+
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Full Description</Label>
+            <Input
+              type="textarea"
+              name="fullDescription"
+              id="exampleEmail"
+              onChange={changingEvent}
+              defaultValue={items?.FullDescription}
+              className='w-100'
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>Short Description</Label>
+            <Input
+              type="textarea"
+              name="shortDescription"
+              id="exampleEmail"
+              onChange={changingEvent}
+              defaultValue={items?.ShortDescription}
+              className='w-100'
+            />
+          </FormGroup>
+          <Button className="m-2 w-50 bg-primary">UPDATE</Button>
+          <Button className="w-25 bg-danger" onClick={backEvent}>
+            BACK
+          </Button>
+        </Form>
+      </div>
+    </div>
+  );
+}
+
+export default Updateproduct;

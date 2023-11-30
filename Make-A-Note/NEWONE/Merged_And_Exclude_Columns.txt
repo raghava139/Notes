@@ -1,0 +1,44 @@
+Q.)
+Merge two columns and then exclude multiple columns        
+
+A.)
+var Merged=[]
+        data?.forEach((item1) => {
+            for (var i = 0; i < item1?.manifestData.length; i++) {
+                if (item1?.hasOwnProperty('manifest0')) {
+                    Merged = Object.assign(item1, { ["Manifest"]: item1?.manifest0 })
+                }
+                if (item1?.hasOwnProperty('manifest0') && item1?.hasOwnProperty('manifest1')) {
+                    Merged = Object.assign(item1, { ["Manifest"]: item1?.manifest0 + " , " + item1?.manifest1 })
+                }
+                if (item1?.hasOwnProperty('manifest0') && item1?.hasOwnProperty('manifest1') && item1?.hasOwnProperty('manifest2')) {
+                    Merged = Object.assign(item1, { ["Manifest"]: item1?.manifest0 + " , " + item1?.manifest1 + " , " + item1?.manifest2 })
+                }
+                if (item1?.hasOwnProperty('manifest0') && item1?.hasOwnProperty('manifest1') && item1?.hasOwnProperty('manifest2') && item1?.hasOwnProperty('manifest3')) {
+                    Merged = Object.assign(item1, { ["Manifest"]: item1?.manifest0 + " , " + item1?.manifest1 + " , " + item1?.manifest2 + " , " + item1?.manifest3 })
+                }
+            }
+        })
+        var excludedColumns = ['manifestData', 'manifest0', 'manifest1', 'manifest2', 'manifest3'];
+        // Create a new array with only the columns you want to include
+        var includedData = [];
+        data.forEach(function (row) {
+            var includedRow = {};
+            Object.keys(row).forEach(function (key) {
+                if (!excludedColumns.includes(key)) {
+                    includedRow[key] = row[key];
+                }
+            });
+            includedData.push(includedRow);
+        });
+
+        var FilterIncludeData=[]
+        FilteredData.forEach(function (row) {
+            var includedRow_1 = {};
+            Object.keys(row).forEach(function (key) {
+                if (!excludedColumns.includes(key)) {
+                    includedRow_1[key] = row[key];
+                }
+            });
+            FilterIncludeData.push(includedRow_1);
+        });

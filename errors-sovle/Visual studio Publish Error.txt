@@ -1,0 +1,21 @@
+VISUAL STUDIO PUBLISH ERROR
+Q.)
+Publish has encountered an error.
+Build failed. Check the Output window for more details.
+Q.)
+A diagnostic log has been written to the following location:
+"C:\Users\Lenovo\AppData\Local\Temp\tmpEA2D.tmp"
+c:\Users\manoj\AppData\Local\Temp
+
+--The command "npm run build --prod" exited with code 134
+--Error:Reached heap limit Allocation failed - JavaScript heap out of memory	
+MARSV3	EXEC 0	
+
+A.)
+From the control panel go to System -> Advanced system settings ->
+ Environment Variables -> 
+New (user or system) and increase the Variable value
+
+variable name :NODE_OPTIONS
+Variable value:--max-old-space-size=8192
+

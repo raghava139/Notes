@@ -1,0 +1,37 @@
+component /modules...
+how can we c/m are export , import 
+
+In export There are two ways of exports
+1.named exports
+2.default exports
+1.named exports
+--->i.))   inline individually
+--->ii.))  all at once at the bottom (all we can export at the bottom at once)
+
+i.)  export const name = "raghava"
+      export const age =40
+
+ii.) const name = "raghava"
+     const age = 40
+
+     export { name, age}
+
+
+2.default exports
+---->i.)) only one default export....
+	const message = ( ) => {
+	return(_)
+	}
+	export default message
+
+ 
+your can import there are two ways of imports
+1.)named exports
+2.default exports
+
+1.) Named exports
+example:
+ 	import {name,age} from './ok.js'
+2.)Export exports
+example : 
+	import message from './ok.js'

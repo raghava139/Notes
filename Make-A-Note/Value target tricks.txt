@@ -1,0 +1,6 @@
+------> setCartData((state) => ({ ...state, [name]: value, 'end': value * 6 }))
+------> const piclocat = (checked) => {
+        console.log(checked)
+        setLocationData((state) => ({ ...state, "picklocation": checked }))
+        //setLocationData({ ...locationData, "pickseq": checked })
+    }

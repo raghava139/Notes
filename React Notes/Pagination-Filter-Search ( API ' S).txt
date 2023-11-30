@@ -1,0 +1,629 @@
+const { useState, useEffect } = React;
+const { Table, AutoComplete, Button, Tag } = antd;
+
+$(document).ready(function () {
+    $("#showerrorMsg,#showSKUGrid").hide();
+
+
+
+    //var v_SKUtable;
+    //v_SKUtable = $("#skutable").DataTable({
+    //    'paging': true,
+    //    'lengthChange': true,
+    //    'searching': true,
+    //    'ordering': true,
+    //    "pageLength": 25,
+    //    'info': true,
+    //    'autoWidth': false,
+    //    columnDefs: [
+    //        {
+    //            'targets': [2],
+    //            'visible': true,
+    //        }
+    //    ],
+    //    dom: 'Blfrtip',
+    //    buttons: [
+    //        {
+    //            extend: 'excel',
+    //            className: 'buttons-excel',
+    //            text: function () {
+    //                return 'EXCEL'.toUpperCase();
+    //            },
+    //            exportOptions: {
+    //                columns: ':visible'
+    //            },
+    //            title: null
+    //        }
+    //    ],
+    //});
+
+    var uploadSKUTable = $("#excel_sku_table").DataTable({
+        'paging': true,
+        'lengthChange': true,
+        "pageLength": 25,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': false,
+        dom: 'Bfrtip',
+        buttons: [
+            'excel'
+        ]
+    });
+    
+    //if (clientid != undefined) {
+
+    //    setTimeout(
+    //        function () {
+    //            $('#drp_ClientList option').map(function () {
+    //                if ($(this).val() == clientid) return this;
+    //            }).attr('selected', 'selected').change();
+    //        }, 2000);
+    //    setTimeout(
+    //        function () {
+    //    var txt = $('#drp_ClientList option:selected').text();
+    //            //SKUGridFunc(clientid, txt);
+    //        }, 2000);
+
+    //    //setTimeout(function () {
+    //    //    //   // Initialize Select2
+    //    //    //var sss=  $('#drp_ClientList').select2();
+
+    //    //    //   // Set selected
+    //    //    //  sss.val(clientid);
+    //    //    //  $('#drp_ClientList').select2().trigger('change');
+    //    //    $('#drp_ClientList').val(clientid).trigger('change');
+    //    //}, 1500);
+    //    //var txt = $('#drp_ClientList option:selected').text();
+    //    //SKUGridFunc(clientid, txt);
+    //}
+
+    //async function SKUGridFunc(clientVal, ClientName) {
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/SKU/GetSKUDetails/",
+    //        data: { ClientID: clientVal },
+    //        success: function (result) {
+    //            var rowdata = result.data;
+    //            console.log(rowdata);
+    //            if (rowdata.length > 0) {
+    //                $("#showSKUGrid").show();
+    //                $("#cname").text(ClientName);
+    //                for (var i = 0; i < rowdata.length; i++) {
+    //                    var Activestatus;
+    //                    if (rowdata[i].status == "Active") {
+    //                        Activestatus = "<span class='badge badge-pill badge-success'>Active</span>";
+    //                    }
+    //                    else if (rowdata[i].status == "Hold") {
+    //                        Activestatus = "<span class='badge badge-pill statushold'>HOLD</span>";
+    //                    }
+    //                    else if (rowdata[i].status == "Inactive") {
+    //                        Activestatus = "<span class='badge badge-pill badge-warning'>Inactive</span>";
+    //                    }
+    //                    else if (rowdata[i].status == "Discontinue") {
+    //                        Activestatus = "<span class='badge badge-pill statusdiscontinue'>Discontinue</span>";
+    //                    }
+    //                    else {
+    //                        Activestatus = "<span class='badge badge-pill statusDefective'>Invalid</span>";
+    //                    }
+
+    //                    var tr = $("<tr><td><a href='EditSKU/" + rowdata[i].skuid + "' style='text-decoration: underline;'>" + rowdata[i].sku1 + "</a></td><td style='text-align:left;'>" + rowdata[i].description + "</td><td>" + Activestatus + "</td><td>" + rowdata[i].itemtype + "</td><td>" + rowdata[i].uom + "</td></tr>");
+    //                    v_SKUtable.row.add(tr[0]).draw();
+    //                    $("#skutable").DataTable().columns(2).search('^Active|Discontinue|Defective|Hold',true,false).draw();
+    //                }
+    //                $("#SKUSearchButton").buttonLoader('stop');
+    //            } else {
+    //                $("#showerrorMsg").show();
+    //                $("#SKUSearchButton").buttonLoader('stop');
+    //            }
+    //        },
+    //        error: function (result) {
+    //            alert('error');
+    //            $("#SKUSearchButton").buttonLoader('stop');
+    //        }
+    //    });
+    //}
+
+    $("input[name = 'statusCheck']").on('click', function () {
+        $("input[name = 'statusCheck']").not(this).prop('checked', false);
+    });
+
+    $("#chkInactive").click(function () {
+        var chkInactive = $(this).is(':checked');
+        var chkDiscontinue = $("#chkDiscontinue").is(':checked');
+        if (chkInactive == true && chkDiscontinue == false) {
+            //$("#skutable").DataTable().columns(2).search("Inactive|Discontinue|Defective|Hold", true, false).draw();
+            $("#skutable").DataTable().columns(2).search("Inactive", true, false).draw();
+        }
+        else {
+            $("#skutable").DataTable().columns(2).search('^Active', true, false).draw();
+        }
+    });
+
+    //Add Sku
+    $("#SKUAddButton").click(function (e) {
+        debugger;
+        $('#sku-add-form').validate({
+            rules: {
+                drp_Add_ClientList: { required: true },
+                txt_SKU: { required: true },
+                txt_Desc: { required: true },
+                drp_ItemType: { required: true },
+                txt_Weight: { required: true },
+                drp_PrimaryUOM: { required: true },
+                txt_Price: { required: true },
+                drp_Status: { required: true },
+            },
+            submitHandler: function (e) {
+                $("#SKUAddButton").buttonLoader('start');
+                var kitStatus = document.getElementById("btn_KitItem").getAttribute("aria-pressed");
+                var addskumodel = {}
+                addskumodel.clientid = $("#drp_Add_ClientList").val();
+                addskumodel.sku1 = $("#txt_SKU").val().toUpperCase();
+                addskumodel.description = $("#txt_Desc").val().toUpperCase();
+                addskumodel.itemtype = $("#drp_ItemType").val();
+                    addskumodel.weight = $("#txt_Weight").val();
+                addskumodel.uom = $("#drp_PrimaryUOM").val();
+                addskumodel.purchasecost = $("#txt_Price").val();
+                addskumodel.status = $("#drp_Status").val();
+                addskumodel.iskititem = kitStatus;
+                $.ajax({
+                    type: "POST",
+                    url: "/SKU/AddClientSKU/",
+                    data: {
+                        addskumodel: addskumodel
+                    },
+                    success: function (data) {
+                        $("#SKUAddButton").buttonLoader('stop');
+                        if (data.responsecode == 200) {
+                            $('#sku-add-form')[0].reset();
+                            window.location.href = "EditSKU/" + data.responsemessage; 
+                        } else {
+                            $("#SKUAddButton").buttonLoader('stop');
+                            var err = data.responsemessage;
+                            swal({
+                                title: "",
+                                text: err.replace(/\|/g, '\n'),
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        $("#SKUAddButton").buttonLoader('stop');
+                        swal("", data.responsemessage);
+                    }
+                });
+            }
+        });
+    });
+
+    // upload sku
+
+    let selectedFile;
+    let excelD = [{
+        "name": "jayanth",
+        "data": "scd",
+        "abc": "sdef"
+    }]
+
+    $("#upload_SKU").change(function (e) {
+        selectedFile = event.target.files[0];
+        handleFileUpload.call(this);
+    });
+    $("#sku_upload_div").hide();
+
+
+    $("#btnUploadSKU").unbind().click(function () {
+        $("#skuclient_err").empty();
+        $("#skufile_err").empty();
+        uploadSKUTable.clear().draw();
+        $("#btnUploadSKU").buttonLoader('start');
+        if ($("#ddlClient").val() == "") {
+            $("#skuclient_err").append('Please select a Client');
+            $("#btnUploadSKU").buttonLoader('stop');
+        } else if (selectedFile === undefined) {
+            $("#skufile_err").append('Please select a File');
+            $("#btnUploadSKU").buttonLoader('stop');
+        } else {
+            XLSX.utils.json_to_sheet(excelD, 'out.xlsx');
+            if (selectedFile) {
+                let fileReader = new FileReader();
+                fileReader.readAsBinaryString(selectedFile);
+                fileReader.onload = (event) => {
+                    let data = event.target.result;
+                    let workbook = XLSX.read(data, { type: "binary" });                    
+                    for (let i = 0; i < 1; i++) {
+                        console.log(workbook.SheetNames[i]);
+                        let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[i]]);
+                        var Id = $("#ddlClient").val();
+                        $("#ddlClient").val("").trigger('change');
+                        $("#upload_SKU").val(null);
+                        rowObject = rowObject.map(row => Object.fromEntries(
+                            Object.entries(row).map(([key, value]) => [typeof key === 'string' ? key.trim() : key, typeof value === 'string' ? value.trim() : value])
+                        ));
+                        console.log(Id);
+                        const skuArray = [];
+                        for (let i = 0; i < rowObject.length; i++) {
+                            console.log(rowObject[i])
+                            rowObject[i].clientid = Id;
+                            skuArray.push(rowObject[i]);
+                        };
+                        console.log(skuArray);
+                        var projectDataList = { "sData": skuArray }
+                        console.log(projectDataList);
+                        $.ajax({
+                            type: "POST",
+                            url: "/SKU/UploadSKU/",
+                            data: JSON.stringify(projectDataList),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            //data: { skuData: skuArray, scount: skuArray.length },
+                            success: function (response) {
+                                $("#sku_upload_div").show();
+                                $("#btnUploadSKU").buttonLoader('stop');
+                                console.log(response.responseDatas);
+                                //if (response.responseDatas.length > 0) {
+                                for (let i = 0; i < response.responseDatas.length; i++) {
+                                    var tr;
+                                    tr = $("<tr style='text-align:center;'><td>" + response.responseDatas[i].name + "</td><td>" + response.responseDatas[i].sData + "</td><td><p>" + response.responseDatas[i].responsemessage + "</p></td></tr>");
+                                    uploadSKUTable.row.add(tr[0]).draw();
+
+                                    if (tr.find("td:eq(2) p").html() === "SKU Already exists") {
+                                        tr.find("td:eq(2) p").css('background-color', '#ffff60');
+                                        tr.find("td:eq(2) p").css('text-align', 'center');
+                                        tr.find("td:eq(2) p").css('border-radius', '10px');
+                                        tr.find("td:eq(2) p").css('box-shadow', '#c1c104 0px 0px 6px 0px');
+                                    } else {
+                                        tr.find("td:eq(2) p").css('background-color', '#3aff3a');
+                                        tr.find("td:eq(2) p").css('text-align', 'center');
+                                        tr.find("td:eq(2) p").css('border-radius', '10px');
+                                        tr.find("td:eq(2) p").css('box-shadow', '0px 0px 6px 0px green');
+                                    }
+                                }
+
+                                $("#data-loading").loading("stop");
+                            },
+                            error: function (result) {
+                                $("#data-loading").loading("stop");
+                                swal({
+                                    title: "Server Error",
+                                    text: result,
+                                    type: "error",
+                                });
+                            }
+                        });
+                    }
+                    //workbook.SheetNames.forEach(sheet => {
+                    //    console.log(sheet);
+
+
+                    //});
+                }
+            }
+        }
+
+        
+    });
+
+    //function capitalizeWords(string) {
+    //    return string.replace(/(?:^|\s)\S/g, function (a) { return a.toUpperCase(); });
+    //};
+});
+
+//SKU MANAGEMENT TABLE (REACT)
+
+//Get Params Value
+function GetParameterValues(param) {
+    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < url.length; i++) {
+        var urlparam = url[i].split('=');
+        if (urlparam[0] == param) {
+            return urlparam[1];
+        }
+    }
+}
+function SkuMagment() {
+
+    //STATES
+    const [MainData, setMainData] = useState();
+    const [searchValue, setSearchValue] = useState("");
+    const [Length1, setLength1] = useState(50);
+    const [searchQuery, setSearchQuery] = useState(null);
+    const [hidprops, setHidprops] = useState(false);
+    const [start, setStart] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [pageSize, setPageSize] = useState(50);
+    const [sortingCol, setSortingCol] = useState("");
+    const [sortingDir, setSortingDir] = useState("");
+    const [skuStatus, setSKUStatus] = useState(null);
+    const [loadingstatus, setLoadingstatus] = useState(false);
+    const [clientid, setClientid] = useState(GetParameterValues('clientID'));
+
+
+
+
+    //Columns For SKU Management
+    const columns = [
+        {
+            title: 'SKU',
+            dataIndex: 'sku1',
+            key: 'sku1',
+            sorter: hidprops,
+            render: (text, record) => {
+                return <a href={`EditSKU/${record?.skuid}`}>{record?.sku1}</a >
+            }
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+            sorter: hidprops,
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            sorter: hidprops,
+            align: 'center',
+            width: '140',
+            render: (_, record) => (
+                <>
+                    <Tag
+                        color={
+                            record.status === "Active"
+                                ? "green"
+                                : record.status === "Inactive"
+                                    ? "red"
+                                    : null
+                        }
+                    >
+                        {record?.status}
+                    </Tag>
+                </>
+            ),
+            filterMultiple: false,
+            ...(hidprops
+                ? {
+                    filters: [
+                        {
+                            text: 'Active',
+                            value: 'Active',
+                        },
+                        {
+                            text: 'Inactive',
+                            value: 'Inactive',
+                        },
+                    ],
+                }
+                : {
+                    fliters: false
+                }),
+        },
+        {
+            title: 'Item',
+            dataIndex: 'itemtype',
+            key: 'itemtype',
+            sorter: hidprops,
+        },
+        {
+            title: 'UOM',
+            dataIndex: 'uom',
+            key: 'uom',
+            sorter: hidprops,
+        }
+
+    ];
+
+    
+
+    //SKUS SEARCH BUTTON CLICK EVENT
+    $("#SKUSearchButton").unbind().click(function (e) {
+        $("#showerrorMsg,#showSKUGrid").hide();
+
+        $('#sku-search-form').validate({
+            rules: {
+                drp_ClientList: {
+                    required: true
+                }
+            },
+            submitHandler: function (e) {
+                apiData(start, currentPage, pageSize, Length1, searchValue, sortingCol, sortingDir, skuStatus);
+            }
+        });
+    });
+
+    // ClientDropdown
+    function Clientslist(callback) {
+        $.getJSON("/Base/LoadClientsForUser", function (data) {
+            if (data.length == 1) {
+                $("#drp_ClientList,#drp_Add_ClientList,#ddlClient").empty();
+            }
+            $.each(data, function (i, data) {
+                $('<option>',
+                    {
+                        value: data.uniqueid,
+                        text: data.clientname
+                    }
+                ).appendTo("#drp_ClientList,#drp_Add_ClientList,#ddlClient");
+            });
+            if (callback) {
+                callback();
+            }
+        });
+    }
+    
+    // CLIENT ID
+    useEffect(() => {
+        var ClientIdGetting = localStorage.getItem('GetClientId');
+        Clientslist(function () {
+            //Get ClientID's
+            if (ClientIdGetting != null) {
+                $("#start-loading").loading("start");
+                $('#drp_ClientList').select2().val(ClientIdGetting).trigger('change');
+                apiData(start, currentPage, pageSize, Length1, searchValue, sortingCol, sortingDir, skuStatus);
+                localStorage.removeItem('GetClientId');
+                $("#start-loading").loading("stop");
+            }
+        });
+    }, []);
+
+    
+    //GET SKUS DATA
+    const apiData = (start, currentPage, pageSize, Length1, searchValue, sortingCol, sortingDir, skuStatus) => {
+        var clientvalue = $('#drp_ClientList option:selected').val();
+      
+        return $.ajax({
+            type: "POST",
+            url: "/SKU/GetSKUDetails/",
+            beforeSend: function () {
+                setLoadingstatus(true);
+            },
+            data: {
+                ClientID: clientvalue,
+                skip: start,
+                draw: currentPage,
+                pagesize: pageSize,
+                length: Length1,
+                SearchValue: searchValue,
+                sortColumn: sortingCol,
+                sortColumnDirection: sortingDir,
+                statusValue: skuStatus
+
+            },
+            success: function (result) {
+                if (result?.status === "success") {
+                    setMainData(result.responseData);
+                    setTotalRecords(result?.recordsTotal);
+                    setHidprops(true);
+                    setLoadingstatus(false);
+                }
+            },
+            error: function (result) {
+                console.log('error', result);
+                setLoadingstatus(false);
+            }
+        });
+    }
+
+    //HIDING PROPS UPDATING
+    useEffect(() => {
+
+    }, [hidprops])
+
+    //HANDLE SEARCH
+    const handleSearch = (value) => {
+        setSearchQuery(value);
+        setSearchValue(value);
+        apiData(0, 1, pageSize, Length1, value, sortingCol, sortingDir, skuStatus);
+    };
+
+    //EXPORT EXCEL SKUMANAGEMENT(TABLE)
+    const SKUExcel = () => {
+        var clientvalueForexcel = $("#drp_ClientList").val();
+        $.ajax({
+            type: "POST",
+            url: "/SKU/excelSkuData/",
+            beforeSend: function () {
+                $("#start-loading").loading("start");
+            },
+            data: {
+                clientId: clientvalueForexcel,
+                searchvalue: searchValue
+            },
+            success: function (data) {
+
+                var nestedData = [];
+                const workbook = XLSX.utils.book_new();
+                if (data?.length > 0) {
+
+                    data?.forEach((record) => {
+                        nestedData.push({
+                            ['SKU']: record?.sku1,
+                            ['Description']: record?.description,
+                            ['Status']: record?.status,
+                            ['Item Type']: record?.itemtype,
+                            ['UOM']: record?.uom,
+                        });
+                    });
+                    const nestedWorksheet = XLSX.utils.json_to_sheet(nestedData);
+                    XLSX.utils.book_append_sheet(workbook, nestedWorksheet, 'sheet1');
+                    XLSX.writeFile(workbook, 'SKU.xlsx');
+                    $("#start-loading").loading("stop");
+
+                }
+                else {
+                    swal({
+                        title: "No Data Found!",
+                        type: "warning",
+                        confirmButtonText: "OK",
+                    });
+                }
+            },
+            error: function (err) {
+                console.log('error in excel', err)
+            }
+        })
+    };
+
+
+    //PAGE LENGTH CHANGES FOR TABLE
+    const onShowSizeChange = (current, pageSize) => {
+        setPageSize(pageSize);
+    };
+
+    //SORT,PAGINATION CHANGES IN TABLE 
+    const Sort_Page_Function = (pagination, filters, sorter) => {
+
+        const pageValue = pagination.current;
+        const pageSizeValue = pagination.pageSize;
+        const newStart = (pageValue - 1) * pageSize;
+        const textcol = sorter.field == undefined ? null : sorter.field;
+        const direction = sorter.order == undefined ? null : sorter.order;
+        const { status } = filters;
+        console.log('status', status);
+        const filtervalue = status !== null || status !== undefined ? status : null;
+
+        setSortingCol(textcol);
+        setSortingDir(direction);
+        setCurrentPage(pageValue);
+        setStart(newStart);
+        setSKUStatus(filtervalue);
+
+        return apiData(newStart, pageValue, pageSizeValue, Length1, searchValue, textcol, direction, status);
+    };
+
+    return (
+        <>
+            {hidprops === true ?
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div>
+                        <Button className="custom-icon" onClick={SKUExcel}><span></span></Button>
+                    </div>
+                    <div>
+                        <AutoComplete
+                            placeholder="Search..."
+                            value={searchQuery}
+                            onChange={(value) => handleSearch(value)}
+                            style={{ width: 239 }} />
+                    </div>
+                </div>
+                : null}
+
+            <Table columns={columns} dataSource={MainData} bordered
+                loading={loadingstatus}
+                sorter={true}
+                onChange={Sort_Page_Function}
+                pagination={{
+                    total: totalRecords,
+                    pageSize: pageSize,
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${totalRecords} Items`,
+                    current: currentPage,
+                    onShowSizeChange: onShowSizeChange,
+                    defaultPageSize: pageSize
+                }}
+            />
+
+        </>
+    );
+}
+ReactDOM.render(<SkuMagment />, document.getElementById('mydiv', 'contentfull'));

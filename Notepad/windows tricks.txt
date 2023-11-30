@@ -1,0 +1,37 @@
+windows tricks
+a-action center
+b-hidden
+c-cortona
+d-desktop
+e-file explorer
+f-feedback hub
+g-gamebar
+h-voice search
+i-setting
+j--null
+k--connect
+l-lock
+m-minimise
+n-null
+o-null
+p-project
+q-search
+r-run command
+s-search
+t--tab
+u---display settings
+v---clipboard history
+w---weather
+x---taskbar setting
+y---null
+z--mini-setting
+
+
+
+j,n,oy
+===enjoy
+-----njoy
+
+
+
+

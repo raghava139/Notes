@@ -1,0 +1,113 @@
+ useEffect(() => {
+    const clmns = [];
+    columns.forEach((e1) => {
+      defaultValue.forEach((e2) => {
+        console.log(e1.key);
+        if (e1.key.toString() === e2.toString()) {
+          clmns.push(e1);
+        }
+      });
+    });
+    setFilteredColumns(clmns);
+  }, [orderDataSource, defaultValue]);
+---------------------------------------------------------------------
+const [defaultValue, setDefaultValues] = useState([
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "9",
+  ]);
+------------------------------------------------------------------------
+   <Dropdown overlay={menu} arrow>
+                          <Button>
+                            <Space>
+                              Columns
+                              <DownOutlined />
+                            </Space>
+                          </Button>
+                   </Dropdown>
+-------------------------------------------------------------------------
+const menu = (
+    <Menu>
+      <Menu.Item>
+        <Checkbox.Group
+          style={{
+            width: "100%",
+          }}
+          defaultValue={defaultValue}
+          onChange={(event) => onChange(event)}
+        >
+          <Col span={8}>
+            <Checkbox disabled value="1" style={{ marginBottom: "7px" }}>
+              Order Id
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="2" disabled style={{ marginBottom: "7px" }}>
+              Customer Order #
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="3" style={{ marginBottom: "7px" }}>
+              Order Status
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="4" style={{ marginBottom: "7px" }}>
+              Customer Name
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="5" style={{ marginBottom: "7px" }}>
+              City/State
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="6" style={{ marginBottom: "7px" }}>
+              Order Creation Date
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="7" style={{ marginBottom: "7px" }}>
+              Ship Cost
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="8" style={{ marginBottom: "7px" }}>
+              Warehouse#
+            </Checkbox>
+          </Col>
+          <Col span={8}>
+            <Checkbox value="9" disabled style={{ marginBottom: "7px" }}>
+              Action
+            </Checkbox>
+          </Col>
+        </Checkbox.Group>
+      </Menu.Item>
+    </Menu>
+-------------------------------------------------------------------------------
+const [filterColumns, setFilteredColumns] = useState([]);
+------------------------------------------------------------------------------
+  const onChange = (checkedValues) => {
+    setDefaultValues(checkedValues);
+  };
+------------------------------------------------------------------------------
+     <Table
+                    columns={filterColumns}
+                    dataSource={
+                      MyfilterTable == null ? tableSkuData : MyfilterTable
+                    }
+                    sortDirections={["descend", "ascend"]}
+                    size="small"
+                    pagination={{
+                      defaultPageSize: 50,
+                      showSizeChanger: true,
+                      pageSizeOptions: ["50"],
+                    }}
+                    style={{ marginTop: "9px" }}
+                    stripes="even"
+                    loading={myLoading}
+                  />

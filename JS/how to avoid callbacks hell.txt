@@ -1,0 +1,9 @@
+how to avoid callbacks hell
+1.Use Promises
+2.Async/Await
+3.Modularization
+4.Named Functions
+5.Error Handling
+6.Use Control Flow Libraries --->Libraries like async.js or bluebird
+7.ES6 Generators
+8.Functional Programming

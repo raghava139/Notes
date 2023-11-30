@@ -1,0 +1,295 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  NavLink,
+  Route,
+  Router,
+  useHistory,
+  useParams,
+} from "react-router-dom";
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormText,
+  CardText,
+  Card,
+  CardBody,
+} from "reactstrap";
+import { Layout, Menu, Breadcrumb, Space } from "antd";
+import { Tabs, Radio } from "antd";
+import { Editor } from "@tinymce/tinymce-react";
+import {
+  DollarCircleTwoTone,
+  HomeTwoTone,
+  PictureTwoTone,
+  ThunderboltTwoTone,
+  CheckOutlined,
+  CheckCircleFilled,
+  PlusCircleOutlined
+} from "@ant-design/icons";
+import UpdateImage from "../ProductsSwitches/updateImage";
+import e from "cors";
+import { create } from "lodash";
+const { SubMenu } = Menu;
+const { Header, Content, Sider } = Layout;
+const { TabPane } = Tabs;
+function Updateproduct() {
+  const { Id } = useParams();
+  // console.log(Id);
+  const [items, setItems] = useState();
+  const history = useHistory();
+  const [state, setState] = useState({
+    tabPosition: "left",
+  });
+  const [image, setImage] = useState();
+  const [picture, setPicture] = useState();
+  const [allPictures, setAllPictures] = useState();
+  const [ourImage, setOurImage] = useState(null);
+  const [pictureData, setPictureData] = useState();
+  const [particularPictureId, setParticularPictureId] = useState();
+  // console.log(ourImage);
+  // console.log(pictureData);
+  // console.log(particularPictureId?.Id);
+  // console.log(picture)
+
+  const backEvent = () => {
+    history.push("/products");
+  };
+  //nested dashboard switching
+  const changeTabPosition = (e) => {
+    setState({ tabPosition: e.target.value });
+  };
+
+  //onChange
+  const handleChange = ({ name, value }) => {
+    setItems((state) => ({
+      ...state,
+      [name]: value,
+    }));
+  };
+
+  // const { sku, productName, price, sold, stock,fullDescription,shortDescription } = update;
+  const clickEvent = (e) => {
+    e.preventDefault();
+    // console.log(update)
+
+    //put method
+    (async () => {
+      let apiRes = null;
+      // const token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
+      // let data=
+      try {
+        apiRes = await axios({
+          method: "PUT",
+          url: `http://216.230.74.17:8010/odata/Product`,
+          headers: {
+            "Content-Type": "application/json",
+            "access-control-allow-origin": "*",
+            Authorization: `Bearer ${token}`,
+            // 'Authorization': 'Bearer '+token
+          },
+          data: items,
+        }).then((res) => {
+          console.log(res);
+          alert("updated successfully");
+        });
+      } catch (err) {
+        apiRes = err.response;
+        console.log(apiRes);
+      }
+    })();
+  };
+
+  //settting the products Details to edit
+  useEffect(() => {
+    const api = `http://216.230.74.17:8010/odata/Product/${Id}`;
+    const token = localStorage.getItem("token");
+    axios
+      .get(api, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        // console.log(res.data?.ProductPictures[0]?.PictureId)
+        setPicture(res.data?.ProductPictures);
+        setItems(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  //categories
+  return (
+    <div style={{ textAlign: "center", marginTop: "100px", width: "100%" }}>
+      <h4 className="text-dark">Update Products</h4>
+      <div className="d-flex justify-content-end">
+        <Button
+          className="m-2 text-white d-flex align-items-center justify-content-center"
+          color="success"
+          size="lg"
+          style={{ width: "130px" }}
+          onClick={clickEvent}
+        >
+          <CheckOutlined className="m-2 text-white" />
+          Save
+        </Button>
+        <Button
+          className="m-2 text-white d-flex align-items-center justify-content-center"
+          color="danger"
+          size="lg"
+          style={{ width: "200px" }}
+        >
+          <CheckCircleFilled className="m-1 text-white" />
+          Save & Continue
+        </Button>
+      </div>
+      <div className="d-flex justify-content-center">
+        {/* sidebar */}
+        {/* <Space style={{ marginBottom: 24}} > */}
+
+        <Card style={{ width: "100%" }}>
+          <CardBody>
+            <CardText>
+              <Form style={{ width: "90rem" }}>
+                <Tabs
+                  tabPosition={state?.tabPosition}
+                  className="bg-white"
+                  color="white"
+                >
+                  {/* tab-1 */}
+                  <TabPane tab="General" key="1">
+                    {/* update Form */}
+
+                    <FormGroup>
+                      <Label>Sku</Label>
+                      <Input
+                        type="text"
+                        name=""
+                        id="exampleEmail"
+                        onChange={(e) =>
+                          handleChange({ name: "Sku", value: e.target.value })
+                        }
+                        defaultValue={items?.Sku}
+                        className="h-75"
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>ProductName</Label>
+                      <Input
+                        type="text"
+                        name=""
+                        id="exampleEmail"
+                        onChange={(e) =>
+                          handleChange({ name: "Name", value: e.target.value })
+                        }
+                        defaultValue={items?.Name}
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>Full Description</Label>
+                      <Editor
+                        apiKey="fgfb0sqsmfzz4mek5y1fis4vjul8anpt81duffkcirokqv3a"
+                        name=""
+                        editorState={items?.FullDescription}
+                        // initialValue={items?.FullDescription}
+                        value={items?.FullDescription}
+                        wrapperClassName="demo-wrapper"
+                        editorClassName="demo-editor"
+                        //onEditorChange
+                        onEditorChange={(content, editor) =>
+                          // console.log(editor)
+                          handleChange({
+                            name: "FullDescription",
+                            value: content,
+                          })
+                        }
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>Short Description</Label>
+                      <Input
+                        type="textarea"
+                        name=""
+                        id="exampleEmail"
+                        onChange={(e) =>
+                          handleChange({
+                            name: "ShortDescription",
+                            value: e.target.value,
+                          })
+                        }
+                        defaultValue={items?.ShortDescription}
+                        className="w-100"
+                        style={{ height: "200px" }}
+                      />
+                    </FormGroup>
+                  </TabPane>
+                  {/* tab-2 */}
+                  <TabPane tab="Prices" key="2">
+                    <FormGroup>
+                      <Label>price</Label>
+                      <Input
+                        type="text"
+                        name="price"
+                        id="exampleEmail"
+                        onChange={(e) =>
+                          handleChange({ name: "Price", value: e.target.value })
+                        }
+                        defaultValue={items?.Price}
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>Sold</Label>
+                      <Input
+                        type="text"
+                        name=""
+                        id="exampleEmail"
+                        onChange={(e) =>
+                          handleChange({ name: "Sold", value: e.target.value })
+                        }
+                        defaultValue={items?.Sold}
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>stockQuantity</Label>
+                      <Input
+                        type="text"
+                        name=""
+                        id="exampleEmail"
+                        onChange={(e) =>
+                          handleChange({
+                            name: "StockQuantity",
+                            value: e.target.value,
+                          })
+                        }
+                        defaultValue={items?.StockQuantity}
+                      />
+                    </FormGroup>
+                  </TabPane>
+                  <TabPane tab="Picture" key="3">
+                    <UpdateImage RealId={Id} picturePass={picture}/>
+                    {/* <img src={`data:image/png;base64,${pictureData}`} />
+                    <br />
+                    <h4>Upload Image</h4>{" "}
+                    <input
+                      type="file"
+                      name="myImage"
+                      onChange={onImageChange}
+                      className="btn btn-danger"
+                      // onClick={Datagetting}
+                      multiple="multiple"
+                      // onClick={UploadImage}
+                    /> */}
+                  </TabPane>
+                </Tabs>
+              </Form>
+            </CardText>
+          </CardBody>
+        </Card>
+      </div>
+    </div>
+  );
+}
+export default Updateproduct;

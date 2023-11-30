@@ -1,0 +1,21 @@
+Antd row selection checkbox
+------------------------------------------------------------------------------------------------------------
+    <Table rowSelection={rowSelection} rowKey={(record) => record.orderid} dataSource={FilteredData == null ? tableSkuData : FilteredData} columns={filterColumns} size="small" pagination={{
+            defaultPageSize: 50,
+            showSizeChanger: true,
+                pageSizeOptions: ["50"],
+        }} scroll={{
+            x: 1300,
+            y: 565,
+            }} />
+---------------------------------------------------------------------------------------------------------------
+    const onSelectChange = (newSelectedRowKeys) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: (selectedRowKeys, selectedRows) => {
+            setSelectedRowKeys(selectedRowKeys)
+        }
+    };

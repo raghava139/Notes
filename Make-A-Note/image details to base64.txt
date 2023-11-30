@@ -1,0 +1,6 @@
+let reader = new FileReader();
+
+reader.onloadend =()=>{
+   console.log(reader.result);
+}
+reader.readerasDataURL(file);

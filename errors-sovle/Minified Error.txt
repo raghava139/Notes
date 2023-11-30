@@ -1,0 +1,3 @@
+Q.)minified errors
+solutions:
+1.use child components and pass props 

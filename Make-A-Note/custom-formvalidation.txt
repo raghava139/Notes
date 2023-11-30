@@ -1,0 +1,28 @@
+Custom Validations Here
+---------------------------------
+
+function customValidation(){
+let isValid = true;
+
+
+if(ERROR){
+	console.log(error)
+	
+  isvalid=false;
+}
+else{
+	
+}
+ return isvalid;
+
+}
+
+
+let isValid = customeValidation()
+
+if(isValid){
+	//submissions here
+}
+else{
+     //falsy's here
+}

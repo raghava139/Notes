@@ -1,0 +1,50 @@
+nodejs build the project
+--------------------------------
+1.create--->webpack.config.js  
+code----|
+const path = require('path');
+module.exports = {
+  entry: './index.js',
+  mode: 'production',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+};
+----------------------------------
+2. create---> .env file
+set NODE_ENV=production
+-------------------------------
+3. In Package.json file
+---->1. npm install webpack --save-dev
+---->2. npm install webpack-cli --save-dev
+----->3. "build":"webpack"
+
+example:---->
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "lives",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "build": "webpack"
+  },
+  "author": "raghava",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "pg": "^8.10.0",
+    "socket.io": "^4.6.1",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.81.0",
+    "webpack-cli": "^5.0.2"
+  }
+}
+-----------------------------------------
+4. npm run build
+

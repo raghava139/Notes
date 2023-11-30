@@ -1,0 +1,313 @@
+$(document).ready(function () {
+    //Get Client List
+    GetUserInfo();
+    //clientDropdown
+    $.getJSON("/Base/LoadClientsForUser", function (data) {
+        $.each(data, function (i, data) {
+            $('<option>',
+                {
+                    value: data.uniqueid,
+                    text: data.clientname
+                }).appendTo("#ddlClient");
+        });
+    });
+    //ApplicationDropdown
+    $.getJSON("/Base/LoadApplicationModule", function (data) {
+        $.each(data, function (i, data) {
+            $('<option>',
+                {
+                    value: data.uniqueid,
+                    text: data.parentmodulename + " -> " + data.childmodulename
+                }).appendTo("#ddlApplication");
+        });
+
+        //$("#ddlApplication").append($("#ddlApplication option:gt(0)").sort(function (a, b) {
+        //    return a.text == b.text ? 0 : a.text < b.text ? -1 : 1;
+        //}));
+
+        $("#ddlApplication option").not(':first').sort(function (a, b) {
+            return a.text == b.text ? 0 : a.text < b.text ? -1 : 1;
+        }).appendTo('#ddlApplication');
+    });
+    async function GetUserInfo() {
+        $("#loading-start").loading("start");
+        $.ajax({
+            type: "POST",
+            url: "/EditUser/GetUserData/",
+            success: function (result) {
+                var rowdata = result.data;
+                if (rowdata.length > 0) {
+                    $("#hdnuserid").val(rowdata[0].uniqueid);
+                    $("#ddlUserType").val(rowdata[0].usertype);
+                    $("#txtCompanyName").val(rowdata[0].companyname);
+                    $("#txtTitle").val(rowdata[0].title);
+                    $("#txtFirstName").val(rowdata[0].fname);
+                    $("#txtLastName").val(rowdata[0].lname);
+                    $("#txtemail").val(rowdata[0].email);
+                    $("#txtuName").val(rowdata[0].username);
+                    $("#txtPwd").val(rowdata[0].password);
+                    $("#txtphone").val(rowdata[0].mobile);
+                    $("#ddlTimezone").val(rowdata[0].timezone).trigger('change');
+
+                    if (rowdata[0].isactive == true) {
+                        $("#userstatus").attr("aria-pressed", "true");
+                        $('#userstatus').addClass("active");
+                    } else {
+                        $("#userstatus").attr("aria-pressed", "false");
+                        $('#userstatus').removeClass("active");
+                    }
+                    if (rowdata[0].photo != '') {
+                        $("#itemPreview").attr("src", rowdata[0].photo);
+                    } else {
+                        $("#itemPreview").attr("src", "../images/avatar/avatar-1.png");
+                    }
+                    if (rowdata[0].allclientsaccess == true) {
+                        setTimeout(function () {
+                            $("#ddlClient").val(['All']).trigger('change');
+                        }, 1500);
+                    }
+                    else {
+                        var arrayClient = [];
+                        for (var i = 0; i < rowdata[0].clientlist.length; i++) {
+                            arrayClient.push(rowdata[0].clientlist[i].clientid);
+                        }
+                        setTimeout(function () {
+                            $("#ddlClient").val(arrayClient).trigger('change');
+                        }, 1500);
+                    }
+                    if (rowdata[0].allmodulesaccess == true) {
+                        setTimeout(function () {
+                            $("#ddlApplication").val(["All"]).trigger('change');
+                        }, 1000);
+                    }
+                    else {
+                       // alert();
+                        var arrayModule = [];
+                        for (var i = 0; i < rowdata[0].modulelist.length; i++) {
+                            arrayModule.push(rowdata[0].modulelist[i].moduleid);
+                        }
+                        setTimeout(function () {
+                            $("#ddlApplication").val(arrayModule).trigger('change');
+                        }, 1000);
+
+                    }
+
+                    if ($('#ddlUserType option:selected').val() == "Client") {
+                        $('#ddlClient').removeAttr("multiple");
+                        $("#ddlClient option[value='All']").remove();
+                        $("#ddlApplication option[value='All']").remove();
+                    }
+                    else {
+                        $('#ddlClient').attr("multiple", "multiple");
+                        $("#ddlClient option[value='All']").remove();
+                        $("#ddlApplication option[value='All']").remove();
+
+                        $("#ddlClient").prepend("<option value='All'>All</option>")
+                        $("#ddlApplication").prepend("<option value='All'>All</option>")
+
+                    }
+                }
+                $("#loading-start").loading("stop");
+            }
+        });
+    }
+//client--->All(remove)
+    $("#ddlUserType").unbind().change(function () {
+        swal({
+            title: "Are You Sure To Clear?",
+            text: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes, clear it!",
+            cancelButtonText: "Cancel",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    swal("Cleared!", "", "success");
+                    $('#ddlClient').val(null).trigger('change');
+                    $("#ddlClient").prop("disabled", false);
+                } else {
+                    swal("Cancelled");
+                    $("#ddlClient").prop("disabled", true);
+                }
+            });
+        if ($('#ddlUserType option:selected').val() == "Client") {
+            $('#ddlClient').removeAttr("multiple");
+            $("#ddlClient option[value='All']").remove();
+            $("#ddlApplication option[value='All']").remove();
+        }
+        else {
+            $('#ddlClient').attr("multiple", "multiple");
+            $("#ddlClient option[value='All']").remove();
+            $("#ddlApplication option[value='All']").remove();
+            $("#ddlClient").prepend("<option value='All'>All</option>")
+            $("#ddlApplication").prepend("<option value='All'>All</option>")
+  
+        }
+    });
+
+    $("#btnCancel").click(function (e) {
+        window.location.href = '/User';
+    });
+
+
+    //Add User
+    $("#btnSaveUser").click(function (e) {
+       ///All and Clients 
+        //var myValue = $('#ddlClient').select2().val();
+        //var myAppValue = $('#ddlApplication').select2().val();
+        //let clientTOst;
+        //let APpToSt;
+        //if ((myValue.length > 1 && myValue.some((initialValue) => initialValue == "All")) || (myAppValue.length > 1 && myAppValue.some((initialValue) => initialValue == "All"))){
+        //    //swal({
+        //    //    title: "Warning",
+        //    //    type: "warning",
+        //    //});
+        //}
+        //else {
+        //    var clientValues = $('#ddlClient').select2().val();
+        //      clientTOst = clientValues.toString();
+        //    var APPlicationsValues = $('#ddlApplication').select2().val();
+        //      APpToSt = APPlicationsValues.toString();
+        //}
+
+        //console.log(APpToSt);
+        //console.log(clientTOst);
+        //var myAppValue = $('#ddlApplication').select2().val();
+        //console.log(myAppValue);
+        //if (myAppValue.length > 1 && myAppValue.some((initialValue) => initialValue == "All")) {
+        //    swal({
+        //        title: "Warning--1",
+        //        type: "warning",
+        //    });
+        //}
+        //else {
+        //    //console.log('working');
+        //}
+       
+        //debugger;
+        $('#user-add-form').validate({
+            rules: {
+                ddlUserType: { required: true },
+                txtCompanyName: { required: true },
+                txtemail: { required: true, email: true },
+                ddlClient: { required: true },
+                ddlApplication: { required: true },
+                txtFirstName: { required: true },
+                txtLastName: { required: true },
+                txtPassword: { required: true, minlength: 5 },
+                txtUserName: { required: true },
+                cfmPassword: { minlength: 5, equalTo: "#txtPassword" }
+            },
+            submitHandler: function (e) {
+                var _whUserinfo = {}
+                var userStatus = document.getElementById("userstatus").getAttribute("aria-pressed");
+                _whUserinfo.Uniqueid = $("#hdnuserid").val();
+                _whUserinfo.Usertype = $("#ddlUserType").val();
+                _whUserinfo.Companyname = $("#txtCompanyName").val();
+                _whUserinfo.Title = $("#txtTitle").val();
+                _whUserinfo.Fname = $("#txtFirstName").val();
+                _whUserinfo.Lname = $("#txtLastName").val();
+                _whUserinfo.Email = $("#txtemail").val();
+                _whUserinfo.Username = $("#txtuName").val();
+                _whUserinfo.Password = $("#txtPwd").val();
+                _whUserinfo.Mobile = $("#txtphone").val();
+                _whUserinfo.Picture = $("#fPhoto").val();
+                _whUserinfo.Timezone = $("#ddlTimezone").val();
+                _whUserinfo.IsActive = userStatus;
+
+                //_whUserinfo.moduleid = $('#ddlApplication option:selected')
+                //    .toArray().map(item => item.value).join();
+                //_whUserinfo.clientid = $('#ddlClient option:selected')
+                //    .toArray().map(item => item.value).join();
+
+                var myValue = $('#ddlClient').select2().val();
+                var myAppValue = $('#ddlApplication').select2().val();
+                if ((myValue.length > 1 && myValue.some((initialValue) => initialValue == "All")) || (myAppValue.length > 1 && myAppValue.some((initialValue) => initialValue == "All"))) {
+                    swal({
+                        title: "Warning!",
+                        type: "warning",
+                    });
+                    _whUserinfo.clientid = "";
+                    _whUserinfo.moduleid = "";
+                    return false;
+                }
+                else {
+                    _whUserinfo.clientid = $('#ddlClient').select2().val().toString();
+                    _whUserinfo.moduleid = $('#ddlApplication').select2().val().toString();
+                }
+                console.log(_whUserinfo);
+                var myImage = document.getElementById('itemPreview');
+                var myCanvas = document.getElementById('mycanvas');
+                var ctx = myCanvas.getContext('2d');
+                ctx.drawImage(myImage, 0, 0);
+                var mydataURL = myCanvas.toDataURL('image/png');
+                _whUserinfo.UserPhoto = mydataURL;
+                var formData = new FormData();
+                var files = $('#fPhoto').prop("files");
+                for (var i = 0; i < files.length; i++) {
+                    formData.append("uploadFile", files[i]);
+                    // uploadfileNameArry.push(files[i].name);
+                }
+                if (files.length > 0) {
+                    $.ajax({
+                        url: "/User/UserPhoto",
+                        type: "POST",
+                        data: formData,
+                        dataType: "json",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                        },
+                        error: function (result) {
+                            swal("", result, "error");
+                        }
+                    });
+                }
+           //return false;
+                $("#btnSaveUser").buttonLoader('start');
+                $.ajax({
+                    type: "POST",
+                    url: "/User/UpdateUser/",
+                    data: { WhUserInfo: _whUserinfo },
+                    success: function (data) {
+                        console.log(data);
+                        $("#btnSaveUser").buttonLoader('stop');
+                        if (data.responsecode == 200) {
+                           // $('#user-add-form')[0].reset();
+                            setTimeout(function () {
+                                swal({
+                                    title: "User updated",
+                                    text: "",
+                                    type: "success"
+                                }, function () {
+                                   // window.location = "/User";
+                                });
+                            }, 1000);
+                        } else if (data.responsecode == 300) {
+                            var err = data.responsemessage;
+                            //console.log(err);
+                            swal({
+                                title: "",
+                                text: err.replace(/\|/g, '\n'),
+                            });
+                        } else {
+                            swal(data.responsemessage);
+                        }
+                    },
+                    error: function (result) {
+                        $("#btnSaveUser").buttonLoader('stop');
+                        swal({
+                            title: "Server Error",
+                            text: result,
+                        });
+                    }
+                });
+            }
+        });
+    });
+});

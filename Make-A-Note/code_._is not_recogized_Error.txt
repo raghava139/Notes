@@ -1,0 +1,6 @@
+Q.)
+code . is not recogized
+
+A.) environment Variables-->
+variable Name :    path
+variable value  :   C:\Users\User_Name\AppData\Local\Programs\Microsoft VS Code\bin

@@ -1,0 +1,22 @@
+1.nodejs install
+2.git install
+3.choco install
+4.android studio install
+5.environment variables setup
+6.npx react-native init pojectname
+	(OR)
+  npx react-native@26.4 init project-name
+7.npm run android
+	(OR)
+  npm run start
+
+
+
+
+
+
+
+
+
+
+

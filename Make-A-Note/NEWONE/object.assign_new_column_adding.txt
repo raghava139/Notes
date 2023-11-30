@@ -1,0 +1,13 @@
+//object dynamically adding  a new column
+    useEffect(() => {
+        var array = [];
+        if (data?.length > 0) {
+            data?.forEach((item1) => {
+                for (var i = 0; i < item1?.manifestData.length; i++) {
+                    //var dataCopy = Object.assign(item1, { ["merged"]: item1?.manifestData[i].manifestid + " / " + item1?.manifestData[i].manifeststatus })
+
+                    array.push(dataCopy);
+                }
+            })
+        }
+    }, [data, TableRowCount]);

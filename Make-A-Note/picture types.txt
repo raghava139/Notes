@@ -1,0 +1,8 @@
+"MimeType": "image/jpeg",
+  "SeoFilename": "samsung-galaxy-abcz-flip-3-5g-factory-unlocked-android-cell-phone-us-version-smartphone-flex-mode-intuitive-camera-compact-128gb-storage-us-warranty-phantom-black",
+  "AltAttribute": null,
+  "TitleAttribute": null,
+  "Reference": 40,
+  "ObjectId": "61977973427b71cdd2ace365",
+  "IsNew": false,
+  "Id": "61977a54427b71cdd2ace495"

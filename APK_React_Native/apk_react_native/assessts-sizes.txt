@@ -1,0 +1,4 @@
+1024 *1024 pixel-->icon
+1284 * 2778 pixel -->splash
+48 * 48 ---->favicon
+1024 *1024 pixel -->adaptive-icon

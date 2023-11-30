@@ -1,0 +1,15 @@
+Q.)virtual dom use in react ?
+ans.)  
+In a virtual DOM (Document Object Model) implementation, there are typically two DOMs involved: the real DOM and the virtual DOM.
+
+Real DOM:
+The real DOM is the actual browser representation of the HTML document. It is the tree-like structure of HTML elements that the browser creates when it parses the HTML markup. Each HTML element becomes a node in the DOM tree, with properties and methods that can be accessed and manipulated using JavaScript. The real DOM is responsible for rendering the web page, handling events, and updating the layout when changes occur.
+
+Virtual DOM:
+The virtual DOM is a lightweight copy or representation of the real DOM. It is a JavaScript object that mimics the structure and properties of the real DOM nodes. The virtual DOM is typically implemented as a tree of virtual DOM nodes, where each node corresponds to a real DOM node.
+
+The virtual DOM is used as an abstraction layer between the application's state and the real DOM. Instead of directly manipulating the real DOM, changes are made to the virtual DOM first. These changes are then compared with the previous version of the virtual DOM (diffing), and the minimal set of real DOM updates required to reflect the changes are applied. This process is known as reconciliation.
+
+By using the virtual DOM, developers can achieve efficient updates and improve performance by minimizing the number of direct manipulations on the real DOM. The virtual DOM allows batch updates, reduces layout recalculations, and provides a way to optimize rendering operations.
+
+To summarize, in a virtual DOM implementation, there is one real DOM that represents the actual HTML document rendered in the browser, and there is one virtual DOM that acts as a lightweight, JavaScript-based copy of the real DOM, used for efficient updates and rendering optimizations.

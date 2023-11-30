@@ -1,0 +1,138 @@
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+-----------------------------------------------------------
+<PdfIcon
+                            style={{
+                              color: "red",
+                              cursor: "pointer",
+                              paddingRight: "3px",
+                            }}
+                            onClick={PdfClick}
+                          />
+-------------------------------------------------------------
+  const PdfClick = () => {
+    const doc = new jsPDF("l", "pt", "a4");
+    doc.autoTable(filterColumns.map((col) => ({ ...col, dataKey: col.dataKey })), tableSkuData, {
+      startY: 60,
+    });
+    doc.save();
+  };
+---------------------------------------------------------------
+  const columns = [
+    {
+      key: "1",
+      title: "SKU",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "sku1",
+      sorter: (a, b) => a.sku1 - b.sku1,
+      render: (_, record) => (
+        <Link to={`/edit-sku/${record?.skuId}`}>{record?.sku1}</Link>
+      ),
+    },
+    {
+      key: "2",
+      title: "Description",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "description",
+      sorter: (a, b) => a.description.length - b.description.length,
+      render: (_, record) => (
+        <Typography.Text>{record?.description}</Typography.Text>
+      ),
+    },
+    {
+      key: "3",
+      title: "Status",
+      responsive: ["sm"],
+      align: "left",
+      dataKey: "status",
+      sorter: (a, b) => a.status.length - b.status.length,
+      render: (_, record) => (
+        <Tag
+          color={
+            record?.status === "Active"
+              ? "green"
+              : record?.status === "Discontinue"
+              ? "warning"
+              : record?.status === "Hold"
+              ? "lightgrey"
+              : record?.status === "Defective"
+              ? "red"
+              : null
+          }
+        >
+          {record?.status}
+        </Tag>
+      ),
+    },
+    {
+      key: "4",
+      title: "Item Type",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "itemType",
+      sorter: (a, b) => a.itemType.length - b.itemType.length,
+      render: (_, record) => (
+        <Typography.Text>{record?.itemType}</Typography.Text>
+      ),
+    },
+    {
+      key: "5",
+      title: "UOM",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "uom",
+      sorter: (a, b) => a.uom.length - b.uom.length,
+      render: (_, record) => {
+        return <Typography.Text>{record?.uom}</Typography.Text>;
+      },
+    },
+    {
+      key: "6",
+      title: "Weight",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "weight",
+      sorter: (a, b) => a.weight - b.weight,
+      render: (_, record) => {
+        return record?.weight;
+      },
+    },
+    {
+      key: "7",
+      title: "maxorderQty",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "maxorderQty",
+      sorter: (a, b) => a.maxorderQty - b.maxorderQty,
+      render: (_, record) => record?.maxorderQty,
+    },
+    {
+      key: "8",
+      title: "minorderQty",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "minorderQty",
+      sorter: (a, b) => a.minorderQty - b.minorderQty,
+      render: (_, record) => record?.minorderQty,
+    },
+    {
+      key: "9",
+      title: "purchasecost",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "purchasecost",
+      sorter: (a, b) => a.purchasecost - b.purchasecost,
+      render: (_, record) => record?.purchasecost,
+    },
+    {
+      key: "10",
+      title: "iskititem",
+      responsive: ["sm", "md", "lg"],
+      align: "left",
+      dataKey: "iskititem",
+      sorter: (a, b) => a.iskititem - b.iskititem,
+      render: (_, record) => record?.iskititem,
+    },
+  ].filter((item) => !item.hidden);

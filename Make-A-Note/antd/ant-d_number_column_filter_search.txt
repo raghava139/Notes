@@ -1,0 +1,162 @@
+  const myInputNumber = useRef("");
+  const numericalComparing = useRef(null);
+--------------------------------------------------------------------------------------
+const getColumnsNumber = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => {
+      const selectAfter = (
+        <Select
+          style={{
+            width: 78,
+          }}
+          defaultValue=""
+          // ref={myInputNumber}
+          onSelect={(e) => {
+            console.log(`selected values is ${e}`);
+            myInputNumber.current = e;
+            console.log(numericalComparing?.current.value);
+            setSelectedKeys(
+              myInputNumber?.current === "LessThan" &&
+                numericalComparing.current.value !== null
+                ? tableSkuData.filter(
+                    (field) =>
+                      field?.weight <= numericalComparing?.current.value
+                  )
+                : myInputNumber?.current === "GreaterThan" &&
+                  numericalComparing.current.value !== null
+                ? tableSkuData.filter(
+                    (field) =>
+                      field?.weight >= numericalComparing?.current.value
+                  )
+                : myInputNumber?.current === "EqualTo" &&
+                  numericalComparing.current.value !== null
+                ? tableSkuData.filter(
+                    (field) =>
+                      field?.weight == numericalComparing?.current.value
+                  )
+                : null
+            );
+          }}
+          onChange={(e) => {
+            console.log(`changeSelect ${e}`);
+            // myInputNumber.current = e;
+            console.log(selectedKeys);
+          }}
+        >
+          <Option value="">select</Option>
+          <Option value="LessThan">≤</Option>
+          <Option value="GreaterThan">≥</Option>
+          <Option value="EqualTo">=</Option>
+        </Select>
+      );
+      return (
+        <>
+          <div
+            style={{
+              padding: 8,
+              // display:'flex'
+            }}
+          >
+            <Space direction="vertical">
+              <InputNumber
+                defaultValue={null}
+                ref={numericalComparing}
+               value={numericalComparing?.current?.value}
+                addonAfter={selectAfter}
+                onPressEnter={() =>
+                  handleSearchNumber(selectedKeys, confirm, dataIndex)
+                }
+                onChange={(e) => {
+                  numericalComparing.current = e;
+                  console.log(numericalComparing);
+                  setSelectedKeys(
+                    myInputNumber?.current === "LessThan"
+                      ? tableSkuData.filter(
+                          (field) =>
+                            field?.weight <= numericalComparing?.current
+                        )
+                      : myInputNumber?.current === "GreaterThan"
+                      ? tableSkuData.filter(
+                          (field) =>
+                            field?.weight >= numericalComparing?.current
+                        )
+                      : myInputNumber?.current === "EqualTo"
+                      ? tableSkuData.filter(
+                          (field) =>
+                            field?.weight === numericalComparing?.current
+                        )
+                      : null
+                  );
+                  // console.log(selectedKeys);
+                }}
+              />
+              <Space>
+                <Button
+                  type="link"
+                  size="small"
+                  onClick={(e) => {
+                    handleSearchNumber(selectedKeys, confirm, dataIndex);
+                  }}
+                >
+                  Filter
+                </Button>
+                <Button
+                  onClick={() => clearFilters && handleResetting(clearFilters)}
+                  size="small"
+                  style={{
+                    width: 90,
+                  }}
+                >
+                  Reset
+                </Button>
+                <Button
+                  type="link"
+                  size="small"
+                  style={{
+                    width: 110,
+                  }}
+                  onClick={() => {
+                    confirm({
+                      closeDropdown: true,
+                    });
+                  }}
+                >
+                  close
+                </Button>
+              </Space>
+            </Space>
+          </div>
+        </>
+      );
+    },
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) => {
+      return record?.weight === value?.weight;
+    },
+    onFilterDropdownVisibleChange: (visible) => {
+      console.log(visible);
+      if (visible) {
+        setTimeout(() => numericalComparing.current?.select(), 100);
+      }
+    },
+  });
+-------------------------------------------------
+  const handleResetting = (clearFilters) => {
+    clearFilters();
+    numericalComparing.current.value = 0;
+  };
+  const handleSearchNumber = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    // numericalComparing.current.value = 0;
+  };

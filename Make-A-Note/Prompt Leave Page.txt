@@ -1,0 +1,33 @@
+ import React, { useEffect, useState } from 'react'
+import { Prompt } from 'react-router-dom';
+
+const PageLeaveAlert = ( message = "Are you sure you want to leave this page?") => {
+     
+    const [isDirty, setDirty] = useState(false);
+
+    useEffect(()=>{
+        window.onbeforeunload= isDirty && (()=> message);
+        return()=>{
+           window.onbeforeunload = null;
+        }
+    }, [isDirty]);
+
+    const routerPrompt = <Prompt when={isDirty} message={message}/>
+  return [routerPrompt, ()=> setDirty(true), ()=>setDirty(false)]
+}
+
+export default PageLeaveAlert;
+
+//different page access
+  const [prompt, setDirty, setPristine] = PageLeaveAlert();
+
+
+//onChange Event
+onChange={(e) =>{
+                       handleChange({
+                              name: "Name",
+                              value: e.target.value,
+                            })
+                            setDirty()
+                          }
+                 onChange={(e)=>{handleChange({name:"name",value=e.target},setDirty())

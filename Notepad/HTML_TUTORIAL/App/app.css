@@ -1,0 +1,18 @@
+.raghava{
+  background-color: red;
+  color:white;
+  padding:30px;
+  font-size: 35px;
+}
+.special{
+  background-color: aqua;
+  color:black;
+  font-size: 50px;
+}
+#kiran{
+  font-weight: bold;
+  background-color: blue;
+}
+#range{
+  background-color: grey;
+}

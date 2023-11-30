@@ -1,0 +1,2 @@
+Q.)How to fix 'Static HTML elements with event handlers require a role.'?
+A.) aria-hidden="true"

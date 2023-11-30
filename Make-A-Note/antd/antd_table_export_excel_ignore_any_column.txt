@@ -1,0 +1,22 @@
+---------------------------
+Ignore Any Column in export to excel
+---------------------------
+  const handleClick = () => {
+    alert("excel");
+    const MyGreatValues = filterColumns?.filter((value) => value.key != 10);
+    console.log(MyGreatValues);
+    const excel = new Excel();
+    excel
+      .addSheet("test")
+      .addColumns(
+        filterColumns.filter((value) => {
+          return value?.key == 10;
+        })
+          ? MyGreatValues
+          : null
+      )
+      .addDataSource(shippingColumn, {
+        str2Percent: true,
+      })
+      .saveAs("Excel.xlsx");
+  }; 

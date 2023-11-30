@@ -1,0 +1,16 @@
+                        <Editor
+                          wrapperClassName="wrapper-class"
+                          editorClassName="editor-class"
+                          toolbarClassName="toolbar-class"
+                          defaultEditorState={EditorState.createWithContent(
+                            ContentState.createFromBlockArray(
+                              convertFromHTML(`${items?.FullDescription}`)
+                            )
+                          )}
+                          onEditorStateChange={((content,editor) =>
+                              handleChange({
+                                name: "FullDescription",
+                                value:draftToHtml(convertToRaw(content.getCurrentContent()))
+                              })
+                          )}
+                        />

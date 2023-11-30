@@ -1,0 +1,11 @@
+---------------------------------------------------
+array of objects------to------->single column 
+----------------------------------------------------
+ useEffect(() => {
+    const array = [];
+    orderDataSource?.forEach((item1) => {
+      console.log(item1);
+      const data = Object.assign(item1, item1?.ordersshipments[0]);
+      array.push(data);
+    });
+    setShippingColumn(array);

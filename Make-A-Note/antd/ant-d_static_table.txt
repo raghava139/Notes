@@ -1,0 +1,144 @@
+const columns = [
+        {
+            title: 'Order#',
+            dataIndex: 'order',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.name - b.name,
+        },
+        {
+            title: 'CustomerName',
+            dataIndex: 'CustomerName',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.CustomerName - b.CustomerName,
+        },
+        {
+            title: 'createDate',
+            dataIndex: 'createDate',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.createDate - b.createDate,
+        },
+        {
+            title: 'Mulit Sku',
+            dataIndex: 'Multi_SKU',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.Multi_SKU - b.Multi_SKU,
+        },
+        {
+            title: 'Service',
+            dataIndex: 'Service',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.service - b.service,
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '2',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '3',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground",
+        },
+        {
+            key: '4',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '5',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '6',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '7',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '8',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '9',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+        {
+            key: '10',
+            order: 12343,
+            Client: "Allstate",
+            CustomerName: "Garrett Winters",
+            createDate: "04/25/2022",
+            Multi_SKU: "yes",
+            Service: "UPS Ground"
+        },
+    ];
+    const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+    };
+<Table columns={columns} dataSource={data} onChange={onChange} />
+
+
+///excel converter
+import { Excel } from "antd-table-saveas-excel";
+    const ExcelConverter = () => {
+        const excel = new Excel();
+        excel
+            .addSheet("test")
+            .addColumns(data.columns)
+            .addDataSource(data, {
+                str2Percent: true
+            })
+            .saveAs("orderDashboard.xlsx");
+    };
+                                            
+<Button variant='outline-success mb-3' onClick={ExcelConverter}>Excel</Button>

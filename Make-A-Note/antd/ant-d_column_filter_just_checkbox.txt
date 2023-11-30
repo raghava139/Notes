@@ -1,0 +1,19 @@
+      filters: [
+        {
+          text: "Active",
+          value: "Active",
+        },
+        {
+          text: "Hold",
+          value: "Hold",
+        },
+        {
+          text: "Discontinue",
+          value: "Discontinue",
+        },
+        {
+          text: "Defective",
+          value: "Defective",
+        },
+      ],
+      onFilter: (value, record) => record.status.includes(value)

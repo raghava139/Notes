@@ -1,0 +1,4 @@
+Q.)
+Why axios not submitting data to asp.core api
+A.)
+public IActionResult Save_Avatar([FromBody] WebAvatarModel model)

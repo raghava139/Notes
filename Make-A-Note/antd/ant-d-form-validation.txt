@@ -1,0 +1,696 @@
+import React, { useState, useEffect, useCallback } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
+import {
+  Switch,
+  Spin,
+  Space,
+  Table,
+  Typography,
+  Select,
+  Input,
+  AutoComplete,
+  Tag,
+  Button,
+  Form,
+} from "antd";
+import SendIcon from "mdi-react/SendIcon";
+import SearchIcon from "mdi-react/SearchIcon";
+import AddIcon from "mdi-react/AddIcon";
+import axios from "axios";
+import UserIcon from "mdi-react/UserIcon";
+// import qs from 'qs';
+import {
+  Card,
+  CardBody,
+  Col,
+  ButtonToolbar,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
+} from "reactstrap";
+import classnames from "classnames";
+import SweetAlert from "react-bootstrap-sweetalert";
+import { AvForm, AvField, AvFeedback } from "availity-reactstrap-validation";
+import { Link } from "react-router-dom";
+import Cookies from "universal-cookie";
+import "antd/dist/antd.css";
+import { set } from "react-hook-form";
+
+const { Option } = Select;
+const ABTestingAnalytics = ({ dir, themeName }) => {
+  const [form] = Form.useForm();
+  const [allskuData, setAllSkuData] = useState();
+  const [tableSkuData, setTableSkuData] = useState([]);
+  const [clientList, setClientList] = useState([]);
+  const [showTable, setShowTable] = useState(false);
+  const [clientValue, setClientValue] = useState("");
+  const [formErr, setFormErr] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [added, setAdded] = useState({});
+  const [successModal, setSuccessModal] = useState(false);
+  const [MyfilterTable, setMyfilterTable] = useState();
+  const [myLoading, setMyLoading] = useState(false);
+  const [emptyData, setEmptyData] = useState();
+  const [latestData, setLatestData] = useState({});
+  const [skuData, setSkuData] = useState({
+    alternateitemcode: null,
+    alternateitemdescription: null,
+    clientId: "",
+    cyclemonths: null,
+    description: "",
+    entryDate: "2022-07-07T12:53:41.46",
+    entryuserId: 1002,
+    expDays: 365,
+    expyears: null,
+    gtin: null,
+    hazmat: null,
+    hsnCode: null,
+    imageurl: null,
+    isExpDate: false,
+    isSerialNo: false,
+    iscyclecount: false,
+    ishazmat: false,
+    iskititem: false,
+    islotCode: false,
+    isoversize: false,
+    itemType: "",
+    itemcategory: null,
+    manufacturervendor: null,
+    maxorderQty: null,
+    minorderQty: null,
+    modifiedDate: "2022-07-07T12:53:41.46",
+    modifiedUserId: 1002,
+    mpnCode: null,
+    originid: null,
+    purchasecost: 0,
+    reorderPoint: 0,
+    safetystock: null,
+    sellcost: null,
+    sku1: "",
+    status: "",
+    storagetype: null,
+    subitemcategory: null,
+    uom: "",
+    weight: 0,
+  });
+
+  const [d, setD] = useState({
+    alternateitemcode: null,
+    alternateitemdescription: null,
+    cyclemonths: null,
+    entryDate: "2022-07-07T12:53:41.46",
+    entryuserId: 1002,
+    expDays: 365,
+    expyears: null,
+    gtin: null,
+    hazmat: null,
+    hsnCode: null,
+    imageurl: null,
+    isExpDate: false,
+    isSerialNo: false,
+    iscyclecount: false,
+    ishazmat: false,
+    iskititem: false,
+    islotCode: false,
+    isoversize: false,
+    itemcategory: null,
+    manufacturervendor: null,
+    maxorderQty: null,
+    minorderQty: null,
+    modifiedDate: "2022-07-07T12:53:41.46",
+    modifiedUserId: 1002,
+    mpnCode: null,
+    originid: null,
+    reorderPoint: 0,
+    safetystock: null,
+    sellcost: null,
+    storagetype: null,
+    subitemcategory: null,
+  });
+  const token =
+    "eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidGVzdCIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImV4cCI6IjE2NTc2OTY1NDIiLCJuYmYiOiIxNjU3NjEwMTQyIn0";
+  const handleSku = (e) => {
+    const { name, value } = e.target;
+    setSkuData((state) => ({
+      ...state,
+      [name]: value,
+      clientId: clientValue,
+    }));
+    // setFormErr(formValidate(skuData));
+  };
+
+  const cookies = new Cookies();
+  const onClientChange = (value, name) => {
+    setEmptyData(name?.value);
+    localStorage.setItem("ClientName", name?.name);
+    localStorage.setItem("CLIENTID", value);
+    cookies.set(`clientId`, `${value}`);
+    setShowTable(true);
+    const accessToken = token;
+    // const api = `http://216.230.74.17:7039/api/Sku?clientId=${value}`;
+    const api = `https://localhost:7039/api/Sku?clientId=${value}`;
+    setMyLoading(true);
+    axios
+      .get(api, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        Accept: "*/*",
+      })
+      .then((res) => {
+        setAllSkuData(res?.data);
+        setTableSkuData(res?.data);
+        setMyLoading(false);
+      })
+      .catch((error) => error.message);
+  };
+  const onSelect = (value) => {
+    setClientValue(value);
+  };
+
+  const onSearch = (value) => {
+    console.log("search:", value);
+  };
+
+  const clickToShow = () => {
+    setShowTable(true);
+  };
+  useEffect(() => {
+    // const api = 'http://216.230.74.17:7039/api/Client';
+    const api = "https://localhost:7039/api/Client";
+    axios
+      .get(api, {
+        Accept: "*/*",
+      })
+      .then((res) => {
+        setClientList(res?.data);
+      })
+      .catch((error) => {});
+  }, []);
+  const columns = [
+    {
+      key: "1",
+      title: "SKU",
+      responsive: ["sm"],
+      align: "left",
+      render: (record) => (
+        <Typography.Text>
+          <Link to={`/edit-sku/${record?.skuId}`}>{record?.sku1}</Link>
+        </Typography.Text>
+      ),
+      sorter: (a, b) => a.sku1 - b.sku1,
+    },
+    {
+      key: "2",
+      title: "Description",
+      responsive: ["sm"],
+      align: "left",
+      render: (record) => (
+        <Typography.Text>{record?.description}</Typography.Text>
+      ),
+      sorter: (a, b) => a.description.length - b.description.length,
+    },
+    {
+      key: "3",
+      title: "Status",
+      responsive: ["sm"],
+      align: "left",
+      render: (record) => (
+        <>
+          <Tag
+            color={
+              record.status === "Active"
+                ? "green"
+                : record.status === "Discontinue"
+                ? "warning"
+                : record.status === "Hold"
+                ? "lightgrey"
+                : record.status === "Defective"
+                ? "red"
+                : null
+            }
+          >
+            <Typography.Text>{record?.status}</Typography.Text>
+          </Tag>
+        </>
+      ),
+      sorter: (a, b) => a.status.length - b.status.length,
+    },
+    {
+      key: "4",
+      title: "Item Type",
+      responsive: ["sm"],
+      align: "left",
+      render: (record) => <Typography.Text>{record?.itemType}</Typography.Text>,
+      sorter: (a, b) => a.itemType.length - b.itemType.length,
+    },
+    {
+      key: "5",
+      title: "UOM",
+      responsive: ["sm"],
+      align: "left",
+      render: (record) => <Typography.Text>{record?.uom}</Typography.Text>,
+      sorter: (a, b) => a.uom.length - b.uom.length,
+    },
+  ];
+  const { t } = useTranslation("common");
+
+  const [activeTab, setActiveTab] = useState("1");
+
+  const toggle = (tab) => {
+    if (activeTab !== tab) setActiveTab(tab);
+  };
+  const locale = {
+    emptyText: (
+      <Space size="large">
+        <Spin
+          size="large"
+          style={{ marginTop: "100px", marginBottom: "100px" }}
+        />
+      </Space>
+    ),
+  };
+  const search = (value) => {
+    // console.log("PASS", { value });
+    const filterTable = tableSkuData.filter((o) =>
+      Object.keys(o).some((k) =>
+        String(o[k]).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    setMyfilterTable(filterTable);
+  };
+  const onFinish = (values) => {
+    console.log(values);
+    Object.assign(d, values);
+    const authToken = token;
+    axios({
+      method: "POST",
+      url: "https://localhost:7039/api/Sku",
+      data: d,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        alert("success");
+        setAdded(response.data);
+        setSuccessModal(true);
+        form.resetFields();
+        setSkuData({
+          alternateitemcode: null,
+          alternateitemdescription: null,
+          clientId: "",
+          cyclemonths: null,
+          description: "",
+          entryDate: "2022-07-07T12:53:41.46",
+          entryuserId: 1002,
+          expDays: 365,
+          expyears: null,
+          gtin: null,
+          hazmat: null,
+          hsnCode: null,
+          imageurl: null,
+          isExpDate: false,
+          isSerialNo: false,
+          iscyclecount: false,
+          ishazmat: false,
+          iskititem: false,
+          islotCode: false,
+          isoversize: false,
+          itemType: "",
+          itemcategory: null,
+          manufacturervendor: null,
+          maxorderQty: null,
+          minorderQty: null,
+          modifiedDate: "2022-07-07T12:53:41.46",
+          modifiedUserId: 1002,
+          mpnCode: null,
+          originid: null,
+          purchasecost: 0,
+          reorderPoint: 0,
+          safetystock: null,
+          sellcost: null,
+          sku1: "",
+          status: "",
+          storagetype: null,
+          subitemcategory: null,
+          uom: "",
+          weight: 0,
+        });
+        setMyLoading(false);
+      })
+      .catch((error) => console.log(error));
+  };
+  console.log(skuData);
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+    alert("failed");
+  };
+
+  const ChangingValidation = (e) => {
+    console.log(e);
+    console.log(e.target.value);
+  };
+  return (
+    <Col md={12} lg={12} xl={12}>
+      {successModal ? (
+        <SweetAlert
+          title="Success"
+          success
+          showCancel
+          confirmBtnBsStyle="success"
+          cancelBtnBsStyle="danger"
+          onConfirm={() => {
+            setSuccessModal(false);
+            setShowTable(false);
+            setEmptyData("Select a Person...");
+          }}
+          onCancel={() => {
+            setSuccessModal(false);
+          }}
+        >
+          SKU Added Successfully
+        </SweetAlert>
+      ) : null}
+
+      <Card style={{ minHeight: "500px" }}>
+        <CardBody className="tabs tabs--bordered-top">
+          <Nav tabs>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: activeTab === "1" })}
+                onClick={() => toggle("1")}
+              >
+                <SearchIcon />
+                Search
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: activeTab === "2" })}
+                onClick={() => toggle("2")}
+              >
+                <AddIcon />
+                Add Sku
+              </NavLink>
+            </NavItem>
+          </Nav>
+          <TabContent activeTab={activeTab}>
+            <TabPane tabId="1">
+              <div style={{ width: "50%", margin: "auto", display: "flex" }}>
+                <Select
+                  showSearch
+                  placeholder="Select a person..."
+                  // notFoundContent="No people available"
+                  optionFilterProp="children"
+                  onChange={onClientChange}
+                  onSearch={onSearch}
+                  filterOption={(input, option) =>
+                    option.children.toLowerCase().includes(input.toLowerCase())
+                  }
+                  style={{ width: "100%", height: "32px", marginRight: "10px" }}
+                  allowClear
+                >
+                  {/* <option value="">Select a person</option> */}
+                  {clientList.map((data) => {
+                    return (
+                      <Option
+                        name={data?.clientname}
+                        value={`${data?.uniqueid}`}
+                      >
+                        {data?.clientname}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </div>
+              {showTable ? (
+                <>
+                  <hr style={{ marginTop: "30px" }} />
+                  <div className="table__header">
+                    <h4 className="client_name">
+                      {" "}
+                      <UserIcon /> Client: {}
+                    </h4>
+                    <div style={{ display: "flex", float: "left" }}>
+                      <h4>Search: </h4>
+                      <AutoComplete
+                        style={{
+                          width: "18em",
+                        }}
+                        placeholder="Search by..."
+                        enterButton
+                        onSearch={search}
+                      />
+                    </div>
+                  </div>
+                  <Table
+                    columns={columns}
+                    dataSource={
+                      MyfilterTable == null ? tableSkuData : MyfilterTable
+                    }
+                    size="small"
+                    pagination={{
+                      defaultPageSize: 50,
+                      showSizeChanger: true,
+                      pageSizeOptions: ["50"],
+                    }}
+                    // pagination={pagination}
+                    style={{ marginTop: "9px" }}
+                    stripes="even"
+                    loading={myLoading}
+                  />
+                </>
+              ) : null}
+            </TabPane>
+            <TabPane tabId="2">
+              <Form
+                labelCol={{
+                  span: 8,
+                }}
+                wrapperCol={{
+                  span: 10,
+                }}
+                initialValues={{
+                  remember: true,
+                }}
+                onFinish={(values) => onFinish(values)}
+                onFinishFailed={onFinishFailed}
+                // onSubmit={dataPushing}
+                autoComplete="off"
+                form={form}
+              >
+                <Form.Item
+                  label="Client Name"
+                  name="clientId"
+                  value={skuData?.clientId}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select your Client",
+                    },
+                  ]}
+                  // value={clientId}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Select a Client"
+                    optionFilterProp="children"
+                    onSearch={onSearch}
+                    // value={skuData?.clientId}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    style={{ width: "100%", marginBottom: "0px" }}
+                  >
+                    {clientList.map((data) => {
+                      return (
+                        <Option
+                          key={data?.uniqueid}
+                          value={`${data?.uniqueid}`}
+                        >
+                          {data?.clientname}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  label=" SKU/ITEM Code:"
+                  name="sku1"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your username!",
+                    },
+                  ]}
+                >
+                  <Input onChange={ChangingValidation} />
+                </Form.Item>
+                <Form.Item
+                  label=" Description:"
+                  name="description"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Enter Description!",
+                    },
+                  ]}
+                  value={skuData?.description}
+                >
+                  <Input onChange={ChangingValidation} />
+                </Form.Item>
+                <Form.Item
+                  label=" Item Type: "
+                  name="itemType"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Select itemType!",
+                    },
+                  ]}
+                  value={skuData?.itemType}
+                >
+                  <Select
+                    placeholder="Select Item/Type"
+                    optionFilterProp="children"
+                    onSearch={onSearch}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    style={{ width: "100%", marginBottom: "0px" }}
+                  >
+                    <option value="">Select Item Type</option>
+                    <option value="Item">Item</option>
+                    <option value="Prebuild KIT">Prebuild KIT</option>
+                    <option value="Dynamic KIT">Dynamic KIT</option>
+                    <option value="Non Inventory Item">
+                      Non Inventory Item
+                    </option>
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  label="Weight (lbs):"
+                  type="number"
+                  name="weight"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Enter Your Weight",
+                    },
+                  ]}
+                  value={skuData?.weight}
+                >
+                  <Input onChange={ChangingValidation} />
+                </Form.Item>
+                <Form.Item
+                  label="Primary UOM:"
+                  name="uom"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Select Your Uom!",
+                    },
+                  ]}
+                  value={skuData?.uom}
+                >
+                  <Select
+                    placeholder="Select Uom"
+                    optionFilterProp="children"
+                    onSearch={onSearch}
+                    value={skuData?.uom}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    style={{ width: "100%", marginBottom: "0px" }}
+                  >
+                    <option value="">Select UOM</option>
+                    <option value="UNIT">UNIT</option>
+                    <option value="CASE">CASE</option>
+                    <option value="PACK">PACK</option>
+                    <option value="LPN">LPN</option>
+                    <option value="OTHER">OTHER</option>
+                  </Select>
+                </Form.Item>
+
+                <Form.Item
+                  label="Purchase Cost:($)"
+                  type="text"
+                  name="purchasecost"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Enter Your Purchasecost",
+                    },
+                  ]}
+                  value={skuData?.purchasecost}
+                >
+                  <Input onChange={ChangingValidation} />
+                </Form.Item>
+                <Form.Item
+                  label="Status:"
+                  name="status"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Select Your Status!",
+                    },
+                  ]}
+                  value={skuData?.status}
+                >
+                  <Select
+                    placeholder="Select Status"
+                    optionFilterProp="children"
+                    onSearch={onSearch}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    style={{ width: "100%", marginBottom: "0px" }}
+                  >
+                    <option value="">Select Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Defective">Inactive</option>
+                    <option value="Hold">Hold</option>
+                    <option value="Discontinue">Discontinue</option>
+                  </Select>
+                </Form.Item>
+
+                <Form.Item
+                  wrapperCol={{
+                    offset: 8,
+                    span: 16,
+                  }}
+                >
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
+            </TabPane>
+          </TabContent>
+        </CardBody>
+      </Card>
+    </Col>
+  );
+};
+ABTestingAnalytics.propTypes = {
+  dir: PropTypes.string.isRequired,
+  themeName: PropTypes.string.isRequired,
+};
+
+export default connect((state) => ({ themeName: state.theme.className }))(
+  ABTestingAnalytics
+);

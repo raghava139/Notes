@@ -1,0 +1,43 @@
+apk build in react-native
+steps:-
+1.install java exp for keystore--->Link---->https://www.oracle.com/java/technologies/downloads/
+2.check the keystore in command of 
+C:\Program Files\Java\jdk-18.0.1.1\bin>   keystore
+3.expo build:android -t apk (or) eas build -p android
+4.expo fetch:android:keystore
+
+(or)
+react native-apk steps
+----------------------------
+1.)expo -V ----->to test version
+2.)npm install --global expo-cli eas-cli
+3.)---->expo login
+4.)
+expo start
+(or)
+expo start --tunnel
+
+5.)eas.json---file 
+{
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
+    "production": {}
+  }
+}
+5.)RUN THE BUILD COMMAND
+
+------> npx cross-env EAS_NO_VCS=1 eas build -p android --profile preview
+		(or)
+-----> eas build -p android --profile preview

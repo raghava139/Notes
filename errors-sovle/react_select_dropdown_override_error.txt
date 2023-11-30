@@ -1,0 +1,7 @@
+Q.)dropdown z-index problem in react-select?
+A.)
+<Select 
+    // other props
+    menuPortalTarget={document.body} 
+    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+/>

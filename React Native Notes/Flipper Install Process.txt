@@ -1,0 +1,10 @@
+https://www.youtube.com/watch?v=E-l6E9u72cs
+1. flipper download
+2. open ssl download
+3. choco install watchman---> powershell
+4. install open ssl 
+5. C:\Program Files\OpenSSL-Win64\bin --> env (system variables)
+6. restart the device...
+7. install the adb devices ---> https://developer.android.com/tools/releases/platform-tools
+8. env---> path---> system variables ---> path --> edit > new > C:\Users\Raghava\Downloads\platform-tools_r34.0.5-windows\platform-tools
+9. adb devices (cmd)

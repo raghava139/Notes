@@ -1,0 +1,8 @@
+1.nodemodules uninstall 
+2.nodemodules install
+3.yarn add standard babel-eslint
+4.npm install  standard babel-eslint --legacy-peer-deps
+
+5. Q.)Error: error:0308010C:digital envelope routines:: unsupported
+   A.)"start": "react-scripts --openssl-legacy-provider start"
+

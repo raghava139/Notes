@@ -1,0 +1,24 @@
+antd table overall search 
+-------------------------------------------------------------------------------->
+    const search = (value) => {
+        const filterTable = data.filter((o) =>
+            Object.keys(o).some((k) =>
+                String(o[k]).toLowerCase().includes(value.toLowerCase())
+            )
+        );
+        setFilteredData(filterTable)
+
+    };
+
+---------------------------------------------------------------------------------->
+     <AutoComplete
+                                    style={{
+                                        width: "12em",
+                                        paddingRight: "6px",
+                                        // paddingLeft: "2px",
+                                        paddingBottom: "3px"
+                                    }}
+                                    placeholder="Search by..."
+                                    // size="medium"
+                                    onSearch={search}
+                                />

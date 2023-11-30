@@ -1,0 +1,31 @@
+ternary operator condition hidden true (or) false in antd column
+------------------------------------------------------------------------
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name"
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age"
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+    key: "address"
+  },
+  ...(!hideLast ?
+    [
+      {
+        title: "Action",
+        key: "action",
+        dataIndex: "action",
+        hidden: true
+      }
+    ]
+    :
+    []
+  )
+].filter(item => !item.hidden);

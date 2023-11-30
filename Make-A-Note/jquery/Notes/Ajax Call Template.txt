@@ -1,0 +1,34 @@
+    $('#FORMID').validate({
+        rules: {
+            drp_WHList: { required: true },
+            drp_ClientList: { required: true }
+        },
+		     submitHandler: function (e) {
+				 $.ajax({
+						type: "POST",
+						url: "/OrderDashboard/GetOrder",
+						data: { orderid: BOLOrderId },
+						beforeSend: function () {
+							$("#data-loading").loading("start");
+						},
+						success: function (response) {
+						
+						},
+						 complete: function () {
+							$("#data-loading").loading("stop");
+						},
+						error: function (result) {
+							swal('Error : ' + result);
+							$("#start-loading").loading("stop");
+						}
+			        })		
+			},
+			error: function (result) {
+				swal('Error : ' + result);
+				$("#start-loading").loading("stop");
+			}
+	})
+	
+	
+	
+	
