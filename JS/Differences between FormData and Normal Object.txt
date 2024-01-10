@@ -1,0 +1,17 @@
+Differences between FormData and Normal Object:
+-----------------------------------------------
+
+FormData:
+-------------
+
+---> Suitable for sending files and other form data, such as text fields or checkboxes.
+---> Automatically sets the Content-Type header to multipart/form-data.
+---> Easily handles files and allows appending multiple fields of different types.
+
+
+Normal Object for JSON:
+-----------------------
+
+--->Requires setting the Content-Type header to application/json.
+--->Suitable for sending structured JSON data, but handling files within JSON can be more complex.
+--->If sending files, you might need to encode them as base64 strings or use other methods, increasing payload size.
