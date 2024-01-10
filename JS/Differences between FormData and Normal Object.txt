@@ -15,3 +15,17 @@ Normal Object for JSON:
 --->Requires setting the Content-Type header to application/json.
 --->Suitable for sending structured JSON data, but handling files within JSON can be more complex.
 --->If sending files, you might need to encode them as base64 strings or use other methods, increasing payload size.
+
+
+Considerations:
+-------------------
+Size and Efficiency: If you're dealing with large files, using FormData is generally more efficient, as it supports streaming and doesn't require encoding the file as a base64 string.
+-------------------
+Compatibility: Some APIs may expect files to be sent as part of a FormData object, so it's important to check the server-side expectations.
+-------------
+Flexibility: If your server expects files as part of a JSON payload, you might need additional processing on the server side to handle the files correctly.
+-----------
+
+Note:
+----
+Choose the approach that aligns with your server-side requirements and consider factors such as compatibility, efficiency, and ease of handling on both the client and server sides.
